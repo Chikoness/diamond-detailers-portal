@@ -31,6 +31,10 @@ npm-debug.log*
 /plugins
 /www
 
+.vscode
+.eslintrc.js
+.gitignore
+
 .DS_Store
 node_modules
 /dist
