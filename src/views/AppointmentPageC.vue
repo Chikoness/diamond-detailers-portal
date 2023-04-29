@@ -3,7 +3,7 @@
     <ion-content :fullscreen="true">
       <div id="customer-appt">
         <div class="list">
-          <ion-button>New Appointment</ion-button>
+          <ion-button href="/customer/appointment/new">New Appointment</ion-button>
           <ion-input
             label="Enter your Appointment ID"
             label-placement="stacked"

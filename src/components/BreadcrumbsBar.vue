@@ -8,10 +8,15 @@
         <template v-if="checkUserType == 'customer'">
             <ion-breadcrumb href="/customer">Customer</ion-breadcrumb>
             <ion-breadcrumb
-                v-if="checkCurrentPage == 'Appointment'"
-                href="/customer/appointment"
+                v-if="checkCurrentPage == 'Appointment' || checkCurrentPath.includes('/new')"
             >
                 Appointment
+            </ion-breadcrumb>
+
+            <ion-breadcrumb
+                v-if="checkCurrentPage == 'New Appointment'"
+            >
+                Make New Appointment
             </ion-breadcrumb>
         </template>
       </ion-breadcrumbs>
@@ -39,14 +44,22 @@ export default {
     return {};
   },
 
+  mounted() {
+    console.log(this.$router.currentRoute._value.path)
+  },
+
   computed: {
     checkUserType() {
       return "customer";
     },
 
     checkCurrentPage() {
-      return this.$router.currentRoute._rawValue.name;
+      return this.$router.currentRoute._value.name;
     },
+
+    checkCurrentPath() {
+      return this.$router.currentRoute._value.path
+    }
   },
 
   methods: {},

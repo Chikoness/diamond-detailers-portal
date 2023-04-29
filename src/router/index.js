@@ -4,6 +4,7 @@ import EmployeePage from '../views/EmployeePage'
 import CustomerPage from '../views/CustomerPage'
 import EmployerPage from '../views/EmployerPage'
 import AppointmentPageC from '../views/AppointmentPageC'
+import NewAppointmentPage from '../views/Appointment/NewAppointmentPage'
 
 const routes = [
   {
@@ -29,6 +30,11 @@ const routes = [
     path: '/customer/appointment',
     name: 'Appointment',
     component: AppointmentPageC
+  },
+  {
+    path: '/customer/appointment/new',
+    name: 'New Appointment',
+    component: NewAppointmentPage
   },
   {
     path: '/employer',
