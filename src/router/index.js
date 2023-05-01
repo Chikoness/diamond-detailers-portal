@@ -2,9 +2,9 @@ import { createRouter, createWebHistory } from '@ionic/vue-router';
 import HomePage from '../views/HomePage'
 import EmployeePage from '../views/EmployeePage'
 import CustomerPage from '../views/CustomerPage'
-import EmployerPage from '../views/EmployerPage'
-import AppointmentPageC from '../views/AppointmentPageC'
+import AppointmentPage from '../views/AppointmentPage'
 import NewAppointmentPage from '../views/Appointment/NewAppointmentPage'
+import ExistingAppointmentPage from '../views/Appointment/ExistingAppointmentPage'
 
 const routes = [
   {
@@ -27,20 +27,20 @@ const routes = [
     component: CustomerPage
   },
   {
-    path: '/customer/appointment',
+    path: '/appointment',
     name: 'Appointment',
-    component: AppointmentPageC
+    component: AppointmentPage
   },
   {
-    path: '/customer/appointment/new',
+    path: '/appointment/new',
     name: 'New Appointment',
     component: NewAppointmentPage
   },
   {
-    path: '/employer',
-    name: 'Employer',
-    component: EmployerPage
-  }
+    path: '/appointment/edit',
+    name: 'Edit Appointment',
+    component: ExistingAppointmentPage
+  },
 ]
 
 const router = createRouter({

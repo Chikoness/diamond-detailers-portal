@@ -1,51 +1,48 @@
 <template>
-  <ion-page>  
-    <ion-content :fullscreen="true">  
-      <div id="container">
-        <strong>Employee Hello More Words</strong>
+  <ion-page>
+    <ion-content :fullscreen="true">
+      <div id="employee">
+        <p class="title">Welcome back, Ahmad!</p>
+        <br />
+        <div class="list">
+          <ion-button href="employee/appointment">Appointment</ion-button>
+          <ion-button>Appointment</ion-button>
+        </div>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script>
-import { IonContent, IonPage } from '@ionic/vue';
+import { IonContent, IonPage, IonButton } from "@ionic/vue";
 
 export default {
   components: {
     IonContent,
     IonPage,
+    IonButton
   },
-}
+};
 </script>
-
-<style scoped>
-#container {
-  text-align: center;
   
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
+<style lang="scss">
+#employee {
+  width: 100%;
+  height: 100%;
+  padding: 5rem 0;
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
+  .title {
+    margin: auto;
+    text-align: center;
+  }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  
-  color: #8c8c8c;
-  
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
+  .list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    width: 50%;
+  }
 }
 </style>
-  
+    

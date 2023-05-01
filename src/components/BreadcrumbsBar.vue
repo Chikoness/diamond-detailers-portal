@@ -6,18 +6,43 @@
         <ion-breadcrumb href="/home">Home</ion-breadcrumb>
 
         <template v-if="checkUserType == 'customer'">
-            <ion-breadcrumb href="/customer">Customer</ion-breadcrumb>
-            <ion-breadcrumb
-                v-if="checkCurrentPage == 'Appointment' || checkCurrentPath.includes('/new')"
-            >
-                Appointment
-            </ion-breadcrumb>
+          <ion-breadcrumb v-if="checkCurrentPage == 'Customer'" href="/customer">Customer</ion-breadcrumb>
+          <ion-breadcrumb
+            href="/appointment"
+            v-if="
+              checkCurrentPage == 'Appointment' ||
+              checkCurrentPath.includes('/new') ||
+              checkCurrentPath.includes('/edit')
+            "
+          >
+            Appointment
+          </ion-breadcrumb>
 
-            <ion-breadcrumb
-                v-if="checkCurrentPage == 'New Appointment'"
-            >
-                Make New Appointment
-            </ion-breadcrumb>
+          <ion-breadcrumb v-if="checkCurrentPage == 'New Appointment'">
+            Make New Appointment
+          </ion-breadcrumb>
+
+          <ion-breadcrumb v-if="checkCurrentPage == 'Edit Appointment'">
+            Edit Appointment
+          </ion-breadcrumb>
+        </template>
+
+        <template v-else>
+          <ion-breadcrumb href="/Employee">Employee</ion-breadcrumb>
+          <ion-breadcrumb
+            href="/appointment"
+            v-if="
+              checkCurrentPage == 'Appointment' ||
+              checkCurrentPath.includes('/new') ||
+              checkCurrentPath.includes('/edit')
+            "
+          >
+            Appointment
+          </ion-breadcrumb>
+
+          <ion-breadcrumb v-if="checkCurrentPage == 'Edit Appointment'">
+            Edit Appointment
+          </ion-breadcrumb>
         </template>
       </ion-breadcrumbs>
     </ion-toolbar>
@@ -45,12 +70,18 @@ export default {
   },
 
   mounted() {
-    console.log(this.$router.currentRoute._value.path)
+    console.log(this.$router.currentRoute._value.path);
   },
 
   computed: {
     checkUserType() {
-      return "customer";
+      const type = localStorage.getItem("type")
+
+      if (type == null) {
+        return 'customer'
+      }
+
+      return type
     },
 
     checkCurrentPage() {
@@ -58,8 +89,8 @@ export default {
     },
 
     checkCurrentPath() {
-      return this.$router.currentRoute._value.path
-    }
+      return this.$router.currentRoute._value.path;
+    },
   },
 
   methods: {},

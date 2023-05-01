@@ -3,17 +3,18 @@
     <ion-content :fullscreen="true">
       <div id="appt-new">
         <form @submit.prevent="submitForm">
-          <ion-input label="Name" fill="outline" required></ion-input>
-          <ion-input label="Email" fill="outline" required type="email"></ion-input>
+          <ion-input label="Name" fill="outline" v-model="name" required></ion-input>
+          <ion-input label="Email" fill="outline" v-model="email" required type="email"></ion-input>
           <ion-select
             label="Select Car Type"
             interface="popover"
             fill="outline"
             required
+            @ionChange = "car = $event.target.value"
           >
-            <ion-select-option value="apples">Proton Saga</ion-select-option>
-            <ion-select-option value="oranges">Proton Exora</ion-select-option>
-            <ion-select-option value="bananas">Proton x50</ion-select-option>
+            <ion-select-option value="proton saga">Proton Saga</ion-select-option>
+            <ion-select-option value="proton exora">Proton Exora</ion-select-option>
+            <ion-select-option value="proton x50">Proton x50</ion-select-option>
           </ion-select>
           <ion-select
             label="Select services needed"
@@ -21,19 +22,21 @@
             :multiple="true"
             fill="outline"
             required
+            @ionChange = "services = $event.target.value"
           >
-            <ion-select-option value="apples">Premium Wash</ion-select-option>
-            <ion-select-option value="oranges">Wash & Vacuum</ion-select-option>
-            <ion-select-option value="bananas"
+            <ion-select-option value="premium wash">Premium Wash</ion-select-option>
+            <ion-select-option value="wash & vacuum">Wash & Vacuum</ion-select-option>
+            <ion-select-option value="sealant solution"
               >Sealant Solution</ion-select-option
             >
           </ion-select>
-          <ion-input label="Date" type="date" fill="outline"></ion-input>
+          <ion-input label="Date" type="date" fill="outline" @ionChange = "car = $event.target.value"></ion-input>
           <ion-select
             label="Time slot"
             interface="popover"
             fill="outline"
             required
+            @ionChange = "slot = $event.target.value"
           >
             <ion-select-option value="apples">9:00 a.m.</ion-select-option>
             <ion-select-option value="oranges">10:00 a.m.</ion-select-option>
@@ -66,6 +69,17 @@ export default {
     IonInput,
     IonSelect,
     IonSelectOption
+  },
+
+  data() {
+    return {
+      name: null,
+      email: null,
+      car: null,
+      services: null,
+      date: null,
+      slot: null
+    }
   },
 
   methods: {

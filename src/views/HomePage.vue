@@ -32,6 +32,10 @@ export default {
     IonPage,
     IonToolbar,
     IonButton
+  },
+
+  mounted() {
+    console.log(localStorage.getItem("type"))
   }
 }
 </script>

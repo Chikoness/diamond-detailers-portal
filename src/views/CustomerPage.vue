@@ -5,7 +5,7 @@
         <p class="title">Welcome back, Clarissa!</p>
         <br />
         <div class="list">
-          <ion-button href="customer/appointment">Appointment</ion-button>
+          <ion-button href="/appointment">Appointment</ion-button>
           <ion-button>Display Statistics</ion-button>
         </div>
       </div>
