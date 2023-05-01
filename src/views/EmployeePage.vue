@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="employee">
+      <div id="employee" v-if="isEmployerEmployee">
         <p class="title">Welcome back, Ahmad!</p>
         <br />
         <div class="list">
@@ -22,6 +22,18 @@ export default {
     IonPage,
     IonButton
   },
+
+  mounted() {
+    if (!this.isEmployerEmployee) {
+      window.location.href = "/authentication"
+    }
+  },
+
+  computed: {
+    isEmployerEmployee() {
+      return localStorage.getItem("type") == 'employer' || localStorage.getItem("type") == 'employee'
+    }
+  }
 };
 </script>
   
@@ -45,4 +57,3 @@ export default {
   }
 }
 </style>
-    

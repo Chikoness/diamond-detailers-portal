@@ -10,11 +10,11 @@
 
       <div id="container">
         <h2>Welcome to Diamond Detailers Portal</h2>
-        <h4>Are you Employer, employee or customer?</h4>
+        <h4>Are you employer/employee or customer?</h4>
         <br />
-        <ion-button href="/employer">Employer</ion-button>
-        <br />
-        <ion-button href="/employee">Employee</ion-button>
+        <ion-button :href="isEmployerEmployee ? '/employee' : '/authentication'"
+          >Employer / Employee</ion-button
+        >
         <br />
         <ion-button href="/customer">Customer</ion-button>
       </div>
@@ -23,7 +23,13 @@
 </template>
 
 <script>
-import { IonContent, IonHeader, IonPage, IonToolbar, IonButton } from '@ionic/vue';
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonToolbar,
+  IonButton,
+} from "@ionic/vue";
 
 export default {
   components: {
@@ -31,19 +37,28 @@ export default {
     IonHeader,
     IonPage,
     IonToolbar,
-    IonButton
+    IonButton,
   },
 
   mounted() {
-    console.log(localStorage.getItem("type"))
-  }
-}
+    console.log(localStorage.getItem("type"));
+  },
+
+  computed: {
+    isEmployerEmployee() {
+      return (
+        localStorage.getItem("type") == "employer" ||
+        localStorage.getItem("type") == "employee"
+      );
+    },
+  },
+};
 </script>
 
 <style scoped>
 #container {
   text-align: center;
-  
+
   position: absolute;
   left: 0;
   right: 0;
@@ -59,9 +74,9 @@ export default {
 #container p {
   font-size: 16px;
   line-height: 22px;
-  
+
   color: #8c8c8c;
-  
+
   margin: 0;
 }
 

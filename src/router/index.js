@@ -5,6 +5,7 @@ import CustomerPage from '../views/CustomerPage'
 import AppointmentPage from '../views/AppointmentPage'
 import NewAppointmentPage from '../views/Appointment/NewAppointmentPage'
 import ExistingAppointmentPage from '../views/Appointment/ExistingAppointmentPage'
+import AuthenticationPage from '../views/AuthenticationPage'
 
 const routes = [
   {
@@ -20,6 +21,11 @@ const routes = [
     path: '/employee',
     name: 'Employee',
     component: EmployeePage
+  },
+  {
+    path: '/authentication',
+    name: 'Authenticate',
+    component: AuthenticationPage
   },
   {
     path: '/customer',
