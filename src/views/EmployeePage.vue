@@ -2,11 +2,13 @@
   <ion-page>
     <ion-content :fullscreen="true">
       <div id="employee" v-if="isEmployerEmployee">
-        <p class="title">Welcome back, Ahmad!</p>
+        <p class="title">Welcome back, {{ getName }}!</p>
         <br />
         <div class="list">
-          <ion-button href="employee/appointment">Appointment</ion-button>
-          <ion-button>Appointment</ion-button>
+          <template v-if="isEmployer">
+            <ion-button href="/employee/new">Register New Employee</ion-button>
+          </template>
+          <ion-button href="/appointment">Appointment</ion-button>
         </div>
       </div>
     </ion-content>
@@ -32,6 +34,14 @@ export default {
   computed: {
     isEmployerEmployee() {
       return localStorage.getItem("type") == 'employer' || localStorage.getItem("type") == 'employee'
+    },
+
+    isEmployer() {
+      return localStorage.getItem("type") == 'employer'
+    },
+
+    getName() {
+      return localStorage.getItem("name")
     }
   }
 };

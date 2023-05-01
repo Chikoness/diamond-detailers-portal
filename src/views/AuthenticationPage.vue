@@ -4,13 +4,16 @@
       <div id="authenticate">
         <div class="list">
           <form @submit.prevent="submitICNumber">
+            <p>Enter your IC Number to view employer/employee page</p>
             <ion-input
-              label="Enter your IC Number"
-              label-placement="stacked"
               fill="outline"
+              pattern="\d{6}[\-]\d{2}[\-]\d{4}"
+              v-model="icNumber"
               required
             ></ion-input>
-            <ion-button type="submit">Submit</ion-button>
+            <div class="submit-btn">
+                <ion-button type="submit">Submit</ion-button>
+            </div>
           </form>
         </div>
       </div>
@@ -20,6 +23,7 @@
   
 <script>
 import { IonContent, IonPage, IonButton, IonInput } from "@ionic/vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -27,6 +31,12 @@ export default {
     IonPage,
     IonButton,
     IonInput,
+  },
+
+  data() {
+    return {
+      icNumber: null
+    }
   },
 
   computed: {
@@ -43,7 +53,23 @@ export default {
 
   methods: {
     submitICNumber() {
-      window.location.href = "/employee";
+      const data = {
+        icNumber: this.icNumber
+      };
+
+      axios
+        .post(process.env.VUE_APP_BACKEND + "/api/employees/authenticate", data)
+        .then((res) => {
+          localStorage.setItem("name", res.data.name)
+          localStorage.setItem("icNumber", res.data.icNumber);
+          localStorage.setItem("securityLvl", res.data.securityLvl)
+          localStorage.setItem("type", res.data.securityLvl == 1 ? "employer" : "employee")
+
+          window.location.href = "/employee";
+        })
+        .catch((e) => {
+          this.message = "Oh no! " + e.response.data.message;
+        });
     },
   },
 };
@@ -67,6 +93,21 @@ export default {
     align-items: center;
     margin: auto;
     width: 50%;
+
+    form {
+      width: 100%;
+      margin: auto;
+
+      p {
+        text-align: center;
+      }
+
+      .submit-btn {
+        display: flex;
+        justify-content: center;
+
+      }
+    }
 
     ion-button {
       margin-bottom: 8rem;

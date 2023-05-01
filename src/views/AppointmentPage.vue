@@ -3,7 +3,9 @@
     <ion-content :fullscreen="true">
       <div id="customer-appt">
         <div class="list">
-          <ion-button href="/appointment/new">New Appointment</ion-button>
+          <ion-button href="/appointment/new" v-if="checkUserType == 'customer'"
+            >New Appointment</ion-button
+          >
 
           <form @submit.prevent="submitApptId">
             <ion-input
@@ -42,21 +44,21 @@ export default {
 
   computed: {
     checkUserType() {
-      const type = localStorage.getItem("type")
+      const type = localStorage.getItem("type");
 
       if (type == null) {
-        return 'customer'
+        return "customer";
       }
 
-      return type
+      return type;
     },
   },
 
   methods: {
     submitApptId() {
-      window.location.href = "/appointment/edit"
-    }
-  }
+      window.location.href = "/appointment/edit";
+    },
+  },
 };
 </script>
 
