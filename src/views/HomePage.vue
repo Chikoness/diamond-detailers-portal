@@ -16,7 +16,7 @@
           >Employer / Employee</ion-button
         >
         <br />
-        <ion-button href="/customer">Customer</ion-button>
+        <ion-button href="/customer" @click="registerCustomer">Customer</ion-button>
       </div>
     </ion-content>
   </ion-page>
@@ -41,7 +41,11 @@ export default {
   },
 
   mounted() {
-    console.log(localStorage.getItem("type"));
+    if (this.isEmployerEmployee) { 
+      window.location.href = "/employee"
+    } else if (this.checkUserType == 'customer') {
+      window.location.href = "/customer"
+    }
   },
 
   computed: {
@@ -51,7 +55,21 @@ export default {
         localStorage.getItem("type") == "employee"
       );
     },
+
+    checkUserType() {
+      const type = localStorage.getItem("type")
+
+      return type
+    },
   },
+
+  methods: {
+    registerCustomer() {
+      if (localStorage.getItem("type") == null) {
+        localStorage.setItem("type", "customer")
+      } 
+    }
+  }
 };
 </script>
 

@@ -3,47 +3,30 @@
     <ion-toolbar>
       <!-- <ion-title>Diamond Detailers Portal</ion-title> -->
       <ion-breadcrumbs>
-        <ion-breadcrumb href="/home">Home</ion-breadcrumb>
+        <ion-breadcrumb 
+          :href="checkUserType == 'employer' || checkUserType == 'employee' ? '/employee' : checkUserType == 'customer' ? '/customer' : '/home'"
+        >
+          Home
+        </ion-breadcrumb>
 
-        <template v-if="checkUserType == 'customer'">
-          <ion-breadcrumb v-if="checkCurrentPage == 'Customer'" href="/customer">Customer</ion-breadcrumb>
-          <ion-breadcrumb
-            href="/appointment"
-            v-if="
-              checkCurrentPage == 'Appointment' ||
-              checkCurrentPath.includes('/new') ||
-              checkCurrentPath.includes('/edit')
-            "
-          >
-            Appointment
-          </ion-breadcrumb>
+        <ion-breadcrumb
+          href="/appointment"
+          v-if="
+            checkCurrentPage == 'Appointment' ||
+            checkCurrentPath.includes('/new') ||
+            checkCurrentPath.includes('/edit')
+          "
+        >
+          Appointment
+        </ion-breadcrumb>
 
-          <ion-breadcrumb v-if="checkCurrentPage == 'New Appointment'">
-            Make New Appointment
-          </ion-breadcrumb>
+        <ion-breadcrumb v-if="checkCurrentPage == 'New Appointment'">
+          Make New Appointment
+        </ion-breadcrumb>
 
-          <ion-breadcrumb v-if="checkCurrentPage == 'Edit Appointment'">
-            Edit Appointment
-          </ion-breadcrumb>
-        </template>
-
-        <template v-else>
-          <ion-breadcrumb href="/Employee">Employee</ion-breadcrumb>
-          <ion-breadcrumb
-            href="/appointment"
-            v-if="
-              checkCurrentPage == 'Appointment' ||
-              checkCurrentPath.includes('/new') ||
-              checkCurrentPath.includes('/edit')
-            "
-          >
-            Appointment
-          </ion-breadcrumb>
-
-          <ion-breadcrumb v-if="checkCurrentPage == 'Edit Appointment'">
-            Edit Appointment
-          </ion-breadcrumb>
-        </template>
+        <ion-breadcrumb v-if="checkCurrentPage == 'Edit Appointment'">
+          Edit Appointment
+        </ion-breadcrumb>
       </ion-breadcrumbs>
     </ion-toolbar>
   </ion-header>
@@ -76,10 +59,6 @@ export default {
   computed: {
     checkUserType() {
       const type = localStorage.getItem("type")
-
-      if (type == null) {
-        return 'customer'
-      }
 
       return type
     },

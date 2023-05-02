@@ -2,7 +2,7 @@
   <ion-page>
     <ion-content :fullscreen="true">
       <div id="customer">
-        <p class="title">Welcome back, Clarissa!</p>
+        <p class="title">Welcome back, customer!</p>
         <br />
         <div class="list">
           <ion-button href="/appointment">Appointment</ion-button>

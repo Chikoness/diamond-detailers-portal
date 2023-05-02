@@ -12,8 +12,9 @@
               required
             ></ion-input>
             <div class="submit-btn">
-                <ion-button type="submit">Submit</ion-button>
+              <ion-button type="submit">Submit</ion-button>
             </div>
+            <p class="error">{{ message }}</p>
           </form>
         </div>
       </div>
@@ -35,7 +36,8 @@ export default {
 
   data() {
     return {
-      icNumber: null
+      icNumber: null,
+      message: null
     }
   },
 
@@ -68,7 +70,7 @@ export default {
           window.location.href = "/employee";
         })
         .catch((e) => {
-          this.message = "Oh no! " + e.response.data.message;
+          this.message = e.response.data.message;
         });
     },
   },
@@ -106,6 +108,10 @@ export default {
         display: flex;
         justify-content: center;
 
+      }
+
+      .error {
+        color: red;
       }
     }
 
