@@ -2,6 +2,7 @@
 http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
+
 :root {
   /** primary **/
   --ion-color-primary: #3880ff;
@@ -74,6 +75,11 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  /*
+   * Custom css here
+   * -------------------------------------------
+  */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -197,7 +203,7 @@ http://ionicframework.com/docs/theming/ */
    */
 
   .md body {
-    --ion-background-color: #121212;
+    --ion-background-color: #000;
     --ion-background-color-rgb: 18,18,18;
 
     --ion-text-color: #ffffff;

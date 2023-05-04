@@ -3,27 +3,35 @@
     <ion-content :fullscreen="true">
       <div id="customer-appt">
         <div class="list">
-          <ion-button href="/appointment/new" v-if="checkUserType == 'customer'"
+          <ion-button
+            href="/appointment/new"
+            v-if="checkUserType == 'customer'"
+            color="warning"
+            class="appt-btn"
             >New Appointment</ion-button
           >
 
           <form @submit.prevent="submitApptId">
-            <ion-input
-              label="Enter your Appointment ID"
-              label-placement="stacked"
-              fill="outline"
-              required
-            ></ion-input>
-            <br />
-            <ion-input
-              v-if="checkUserType == 'customer'"
-              label="Enter your Email"
-              type="email"
-              label-placement="stacked"
-              fill="outline"
-              required
-            ></ion-input>
-            <ion-button type="submit">Submit</ion-button>
+            <div class="input-group">
+              <ion-input
+                label="Enter your Appointment ID"
+                label-placement="stacked"
+                fill="outline"
+                required
+              ></ion-input>
+              <br />
+              <ion-input
+                v-if="checkUserType == 'customer'"
+                label="Enter your Email"
+                type="email"
+                label-placement="stacked"
+                fill="outline"
+                required
+              ></ion-input>
+            </div>
+            <div class="form-btn">
+              <ion-button color="warning" type="submit">Submit</ion-button>
+            </div>
           </form>
         </div>
       </div>
@@ -64,9 +72,13 @@ export default {
 
 <style lang="scss">
 #customer-appt {
+  text-align: center;
   width: 100%;
-  height: 100%;
-  padding: 5rem 0;
+  height: 90%;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   .title {
     margin: auto;
@@ -74,20 +86,17 @@ export default {
   }
 
   .list {
-    padding-top: 5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: auto;
-    width: 50%;
 
-    ion-button {
-      margin-bottom: 8rem;
+    .appt-btn {
+      margin-bottom: 5rem;
+      box-shadow: rgba(255, 213, 52, 0.4) 0px 5px,
+        rgba(255, 213, 52, 0.3) 0px 10px, rgba(255, 213, 52, 0.2) 0px 15px,
+        rgba(255, 213, 52, 0.1) 0px 20px, rgba(255, 213, 52, 0.05) 0px 25px;
     }
-  }
-
-  ion-item {
-    margin: 2rem 0;
   }
 }
 </style>

@@ -6,7 +6,8 @@
         <ion-breadcrumb 
           :href="checkUserType == 'employer' || checkUserType == 'employee' ? '/employee' : checkUserType == 'customer' ? '/customer' : '/home'"
         >
-          Home
+          <p>Home</p>
+          <ion-icon slot="separator" :icon="arrowForward" :color="light"></ion-icon>
         </ion-breadcrumb>
 
         <ion-breadcrumb
@@ -17,15 +18,16 @@
             checkCurrentPath.includes('/edit')
           "
         >
-          Appointment
+          <p>Appointment</p>
+          <ion-icon slot="separator" :icon="arrowForward" :color="light"></ion-icon>
         </ion-breadcrumb>
 
         <ion-breadcrumb v-if="checkCurrentPage == 'New Appointment'">
-          Make New Appointment
+          <p>New Appointment</p>
         </ion-breadcrumb>
 
         <ion-breadcrumb v-if="checkCurrentPage == 'Edit Appointment'">
-          Edit Appointment
+          <p>Edit Appointment</p>
         </ion-breadcrumb>
       </ion-breadcrumbs>
     </ion-toolbar>
@@ -38,7 +40,9 @@ import {
   IonToolbar,
   IonBreadcrumbs,
   IonBreadcrumb,
+  IonIcon,
 } from "@ionic/vue";
+import { arrowForward } from "ionicons/icons"
 
 export default {
   components: {
@@ -46,10 +50,13 @@ export default {
     IonToolbar,
     IonBreadcrumbs,
     IonBreadcrumb,
+    IonIcon
   },
 
   data() {
-    return {};
+    return {
+      arrowForward
+    };
   },
 
   mounted() {
@@ -76,6 +83,14 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+p {
+  margin: 0;
+  font: 0.9rem "Gotham-Book";
+}
+
+ion-toolbar {
+  --background: none;
+}
 </style>
   

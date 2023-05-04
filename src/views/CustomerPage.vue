@@ -2,11 +2,13 @@
   <ion-page>
     <ion-content :fullscreen="true">
       <div id="customer">
-        <p class="title">Welcome back, customer!</p>
-        <br />
+        <div class="logo small"></div>
+        <p class="title">Welcome, {{ customerName }}!</p>
         <div class="list">
-          <ion-button href="/appointment">Appointment</ion-button>
-          <ion-button>Display Statistics</ion-button>
+          <ion-button color="warning" href="/appointment"
+            >Appointment</ion-button
+          >
+          <ion-button color="warning">Display Statistics</ion-button>
         </div>
       </div>
     </ion-content>
@@ -20,28 +22,46 @@ export default {
   components: {
     IonContent,
     IonPage,
-    IonButton
+    IonButton,
+  },
+
+  computed: {
+    customerName() {
+      return localStorage.getItem("name")
+        ? localStorage.getItem("name")
+        : "customer";
+    },
   },
 };
 </script>
   
 <style lang="scss">
 #customer {
+  text-align: center;
   width: 100%;
-  height: 100%;
-  padding: 5rem 0;
+  height: 50%;
+  margin-top: 10rem;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   .title {
-    margin: auto;
     text-align: center;
   }
 
   .list {
     display: flex;
     flex-direction: column;
-    align-items: center;
     margin: auto;
-    width: 50%;
+    width: 70%;
+
+    ion-button {
+      margin-bottom: 1.2rem;
+      box-shadow: rgba(255, 213, 52, 0.4) 0px 5px,
+        rgba(255, 213, 52, 0.3) 0px 10px, rgba(255, 213, 52, 0.2) 0px 15px,
+        rgba(255, 213, 52, 0.1) 0px 20px, rgba(255, 213, 52, 0.05) 0px 25px;
+    }
   }
 }
 </style>
