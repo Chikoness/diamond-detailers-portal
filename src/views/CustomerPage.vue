@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="customer">
+      <div id="customer" class="container customer-employee">
         <div class="logo small"></div>
         <p class="title">Welcome, {{ customerName }}!</p>
         <div class="list">
@@ -37,15 +37,6 @@ export default {
   
 <style lang="scss">
 #customer {
-  text-align: center;
-  width: 100%;
-  height: 50%;
-  margin-top: 10rem;
-  padding: 0 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
   .title {
     text-align: center;
   }

@@ -8,7 +8,7 @@
         </ion-toolbar>
       </ion-header>
 
-      <div id="main">
+      <div id="main" class="container">
         <div class="logo"></div>
         <span>Welcome to</span>
         <h2>Diamond Detailers Portal</h2>
@@ -96,6 +96,21 @@ div {
   font: 1.2rem 'Gotham-Book';
 }
 
+.container {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+  &.customer-employee {
+    margin-top: 10rem;
+    height: 50%;
+  }
+}
+
 ion-content {
   --background: none;
   background: no-repeat center url('@/assets/img/background2.png');
@@ -136,12 +151,35 @@ form {
     ion-input, ion-select {
       --highlight-color-focused: #000;
       --background: rgba(255, 255, 255, 0.4);
-      --color: #000;
+      --color: #000 ;
       color: #000;
       margin-bottom: 0.5rem;
     }
 
     margin-bottom: 2rem;
+
+  }
+  
+  &.dark {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 1.5rem 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: rgba(255, 255, 255, 0.4) 0px 5px,
+      rgba(255, 255, 255, 0.3) 0px 10px, rgba(255, 255, 255, 0.2) 0px 15px,
+      rgba(255, 255, 255, 0.1) 0px 20px, rgba(255, 255, 255, 0.05) 0px 25px;
+    
+    p {
+      color: #000;
+    }
+    
+    .input-group {
+      ion-input, ion-select {
+        --highlight-color-focused: #000;
+        --background: rgba(255, 255, 255, 1);
+        --color: #000;
+        color: #000;
+      }
+    }
   }
 }
 
@@ -158,15 +196,6 @@ form {
 // <-- Global css theme end --> 
 
 #main {
-  text-align: center;
-  width: 100%;
-  height: 100%;
-  padding: 0 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  /* align-items: center; */
-
   h2 {
     font: 1.7rem 'Gotham-Black';
     margin-top: 0.3rem;

@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="appt-exist">
+      <div id="appt-exist" class="container">
         <form @submit.prevent="submitForm">
           <div class="input-group">
             <ion-input
@@ -128,13 +128,5 @@ export default {
 </script>
 
 <style lang="scss">
-#appt-exist {
-  text-align: center;
-  width: 100%;
-  height: 100%;
-  padding: 0 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+#appt-exist {}
 </style>

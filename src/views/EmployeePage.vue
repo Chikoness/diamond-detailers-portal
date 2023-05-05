@@ -1,7 +1,11 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="employee" v-if="isEmployerEmployee">
+      <div
+        id="employee"
+        class="container customer-employee"
+        v-if="isEmployerEmployee"
+      >
         <p class="title">Welcome back, {{ getName }}!</p>
         <br />
         <div class="list">
@@ -22,37 +26,36 @@ export default {
   components: {
     IonContent,
     IonPage,
-    IonButton
+    IonButton,
   },
 
   mounted() {
     if (!this.isEmployerEmployee) {
-      window.location.href = "/authentication"
+      window.location.href = "/authentication";
     }
   },
 
   computed: {
     isEmployerEmployee() {
-      return localStorage.getItem("type") == 'employer' || localStorage.getItem("type") == 'employee'
+      return (
+        localStorage.getItem("type") == "employer" ||
+        localStorage.getItem("type") == "employee"
+      );
     },
 
     isEmployer() {
-      return localStorage.getItem("type") == 'employer'
+      return localStorage.getItem("type") == "employer";
     },
 
     getName() {
-      return localStorage.getItem("name")
-    }
-  }
+      return localStorage.getItem("name");
+    },
+  },
 };
 </script>
   
 <style lang="scss">
 #employee {
-  width: 100%;
-  height: 100%;
-  padding: 5rem 0;
-
   .title {
     margin: auto;
     text-align: center;

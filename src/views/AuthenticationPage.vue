@@ -3,16 +3,18 @@
     <ion-content :fullscreen="true">
       <div id="authenticate">
         <div class="list">
-          <form @submit.prevent="submitICNumber">
-            <p>Enter your IC Number to view employer/employee page</p>
-            <ion-input
-              fill="outline"
-              pattern="\d{6}[\-]\d{2}[\-]\d{4}"
-              v-model="icNumber"
-              required
-            ></ion-input>
-            <div class="submit-btn">
-              <ion-button type="submit">Submit</ion-button>
+          <form @submit.prevent="submitICNumber" class="dark">
+            <div class="input-group">
+              <p>Enter your IC Number to view employer/employee page</p>
+              <ion-input
+                fill="outline"
+                pattern="\d{6}[\-]\d{2}[\-]\d{4}"
+                v-model="icNumber"
+                required
+              ></ion-input>
+            </div>
+            <div class="form-btn">
+              <ion-button type="submit" color="warning">Submit</ion-button>
             </div>
             <p class="error">{{ message }}</p>
           </form>
@@ -70,7 +72,8 @@ export default {
           window.location.href = "/employee";
         })
         .catch((e) => {
-          this.message = e.response.data.message;
+            this.message = "Cannot connect to backend. Please wait and try again."
+          
         });
     },
   },
@@ -79,9 +82,13 @@ export default {
   
 <style lang="scss">
 #authenticate {
+  text-align: center;
   width: 100%;
   height: 100%;
-  padding: 5rem 0;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   .title {
     margin: auto;
@@ -94,34 +101,17 @@ export default {
     flex-direction: column;
     align-items: center;
     margin: auto;
-    width: 50%;
 
     form {
-      width: 100%;
-      margin: auto;
-
       p {
-        text-align: center;
-      }
-
-      .submit-btn {
-        display: flex;
-        justify-content: center;
-
+        margin-bottom: 1rem;
       }
 
       .error {
+        margin-top: 1.5rem;
         color: red;
       }
     }
-
-    ion-button {
-      margin-bottom: 8rem;
-    }
-  }
-
-  ion-item {
-    margin: 2rem 0;
   }
 }
 </style>

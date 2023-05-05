@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div id="customer-appt">
+      <div id="customer-appt" class="container">
         <div class="list">
           <ion-button
             href="/appointment/new"
@@ -72,13 +72,7 @@ export default {
 
 <style lang="scss">
 #customer-appt {
-  text-align: center;
-  width: 100%;
   height: 90%;
-  padding: 0 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 
   .title {
     margin: auto;
