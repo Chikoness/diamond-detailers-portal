@@ -13,9 +13,9 @@
         <ion-breadcrumb
           href="/appointment"
           v-if="
-            checkCurrentPage == 'Appointment' ||
-            checkCurrentPath.includes('/new') ||
-            checkCurrentPath.includes('/edit')
+            checkCurrentPage == 'Appointment' &&
+            (checkCurrentPath.includes('/new') ||
+            checkCurrentPath.includes('/edit'))
           "
         >
           <p>Appointment</p>
@@ -29,6 +29,15 @@
         <ion-breadcrumb v-if="checkCurrentPage == 'Edit Appointment'">
           <p>Edit Appointment</p>
         </ion-breadcrumb>
+
+        <ion-breadcrumb v-if="checkCurrentPage == 'Register New Employee'">
+          <p>Register New Employee</p>
+        </ion-breadcrumb>
+
+        <ion-breadcrumb v-if="checkCurrentPage == 'Change Employee Details'">
+          <p>Change Employee Details</p>
+        </ion-breadcrumb>
+
       </ion-breadcrumbs>
     </ion-toolbar>
   </ion-header>
@@ -60,7 +69,7 @@ export default {
   },
 
   mounted() {
-    console.log(this.$router.currentRoute._value.path);
+    // console.log(this.$router.currentRoute._value.name);
   },
 
   computed: {

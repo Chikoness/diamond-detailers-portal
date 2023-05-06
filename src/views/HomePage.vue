@@ -105,7 +105,12 @@ div {
   flex-direction: column;
   justify-content: center;
   
-  &.customer-employee {
+  &.employer {
+    margin-top: 5rem;
+    height: 80%;
+  }
+
+  &.employee {
     margin-top: 10rem;
     height: 50%;
   }
@@ -178,7 +183,7 @@ form {
     }
     
     .input-group {
-      ion-input, ion-select {
+      ion-input, ion-select, ion-textarea {
         --highlight-color-focused: #000;
         --background: rgba(255, 255, 255, 1);
         --color: #000;
@@ -188,6 +193,11 @@ form {
           opacity: 0.8;
           --background: rgba(255, 255, 255, 0.1);
         }
+      }
+
+      ion-textarea {
+        margin-bottom: 0.5rem;
+        text-align: left;
       }
     }
   }

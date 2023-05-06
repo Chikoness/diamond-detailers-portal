@@ -7,6 +7,8 @@ import NewAppointmentPage from '../views/Appointment/NewAppointmentPage'
 import ExistingAppointmentPage from '../views/Appointment/ExistingAppointmentPage'
 import AuthenticationPage from '../views/AuthenticationPage'
 import ConfirmationPage from '../views/ConfirmationPage'
+import RegisterEmployee from '../views/Employee/RegisterEmployee'
+import EditEmployee from '../views/Employee/EditEmployee'
 
 const routes = [
   {
@@ -22,6 +24,16 @@ const routes = [
     path: '/employee',
     name: 'Employee',
     component: EmployeePage
+  },
+  {
+    path: '/employee/new',
+    name: 'Register New Employee',
+    component: RegisterEmployee
+  },
+  {
+    path: '/employee/edit',
+    name: 'Change Employee Details',
+    component: EditEmployee
   },
   {
     path: '/authentication',

@@ -73,8 +73,6 @@ export default {
 
   methods: {
     submitApptId() {
-      console.log(this.id)
-
       const data = {
         id: this.id
       }
@@ -92,7 +90,6 @@ export default {
               ? "Cannot connect to backend. Please wait and try again"
               : e.response.data.message;
         });
-
     },
   },
 };
