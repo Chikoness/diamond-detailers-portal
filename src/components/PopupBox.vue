@@ -1,9 +1,12 @@
 <template>
   <div id="popup">
     <div class="pop-container" :class="{employee: isEmployee}">
-      <p>Are you sure you would like to delete this appointment?</p>
-      <div class="form-btn">
-        <ion-button color="danger">Confirm</ion-button>
+      <p>{{ message }}</p>
+      <br />
+      <p>{{ message2 }}</p>
+      <p>{{ message3 }}</p>
+      <div class="form-btn" v-if="displayButtons">
+        <ion-button color="danger" @click="$emit('confirm')">Confirm</ion-button>
         <ion-button :color="isEmployee ? 'light' : 'warning'" @click="$emit('close')">Cancel</ion-button>
       </div>
     </div>
@@ -13,7 +16,7 @@
 <script>
 import { IonButton } from "@ionic/vue";
 export default {
-  props: ["isEmployee"],
+  props: ["isEmployee", "message", "message2", "message3", "displayButtons"],
 
   components: {
     IonButton,
@@ -30,7 +33,7 @@ export default {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.8);
   z-index: 2;
-  padding-top: 65%;
+  padding-top: 55%;
 
   .pop-container {
     width: 80%;
