@@ -6,6 +6,7 @@ import AppointmentPage from '../views/AppointmentPage'
 import NewAppointmentPage from '../views/Appointment/NewAppointmentPage'
 import ExistingAppointmentPage from '../views/Appointment/ExistingAppointmentPage'
 import AuthenticationPage from '../views/AuthenticationPage'
+import ConfirmationPage from '../views/ConfirmationPage'
 
 const routes = [
   {
@@ -47,6 +48,11 @@ const routes = [
     name: 'Edit Appointment',
     component: ExistingAppointmentPage
   },
+  {
+    path: '/confirmation/:id',
+    name: 'Confirmation',
+    component: ConfirmationPage
+  }
 ]
 
 const router = createRouter({
