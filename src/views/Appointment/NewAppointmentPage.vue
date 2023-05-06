@@ -25,15 +25,15 @@
               label-placement="stacked"
               fill="outline"
               required
-              @ionChange="car = $event.target.value"
+              @ionChange="carType = $event.target.value"
             >
-              <ion-select-option value="proton saga"
+              <ion-select-option value="proton-saga"
                 >Proton Saga</ion-select-option
               >
-              <ion-select-option value="proton exora"
+              <ion-select-option value="proton-exora"
                 >Proton Exora</ion-select-option
               >
-              <ion-select-option value="proton x50"
+              <ion-select-option value="proton-x50"
                 >Proton x50</ion-select-option
               >
             </ion-select>
@@ -56,31 +56,60 @@
                 >Sealant Solution</ion-select-option
               >
             </ion-select>
-            <ion-input
+            <!-- <ion-input
               label="Date"
+              :value="date"
               type="date"
               label-placement="stacked"
               fill="outline"
-              @ionChange="car = $event.target.value"
-            ></ion-input>
+              @input="handleDate($event.target.value)"
+            ></ion-input> -->
+            <div class="date-div">
+              <fieldset>
+                <legend>Date</legend>
+                <input
+                  :placeholder="dateToString"
+                  class="date-input"
+                  v-model="dateToString"
+                  :type="type"
+                  onfocus="(this.type='date')"
+                  onblur="(this.type='text')"
+                  name="date"
+                  @change="date = $event.target.value"
+                />
+              </fieldset>
+            </div>
             <ion-select
+              v-if="checkIfDateHasChanged"
               label="Time slot"
               interface="popover"
               label-placement="stacked"
               fill="outline"
               required
-              @ionChange="slot = $event.target.value"
+              @ionChange="timeSlot = $event.target.value"
             >
-              <ion-select-option value="0900">09:00 - 12:00</ion-select-option>
-              <ion-select-option value="1000">14:00 - 15:00</ion-select-option>
-              <ion-select-option value="1200">16:00 - 21:00</ion-select-option>
+              <ion-select-option
+                v-for="(slot, name) in availableTimeSlotList"
+                :key="slot"
+                :value="name"
+                >{{ slotValues(name) }}</ion-select-option
+              >
             </ion-select>
           </div>
 
           <div class="form-btn">
-            <ion-button type="submit">Submit</ion-button>
+            <ion-button
+              v-if="!checkIfDateHasChanged"
+              color="warning"
+              @click="returnSlotAvailability"
+              >Check slot availability</ion-button
+            >
+            <ion-button v-else type="submit">Submit</ion-button>
+
             <ion-button type="reset" color="light">Clear</ion-button>
           </div>
+
+          <p class="error">{{ message }}</p>
         </form>
       </div>
     </ion-content>
@@ -95,6 +124,7 @@ import {
   IonSelect,
   IonSelectOption,
 } from "@ionic/vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -109,19 +139,167 @@ export default {
     return {
       name: null,
       email: null,
-      car: null,
+      carType: null,
       services: null,
       date: null,
-      slot: null,
+      date2: null,
+      timeSlot: null,
+
+      message: null,
+
+      availableTimeSlotList: null,
     };
   },
 
+  computed: {
+    dateToString() {
+      const d = this.date == null ? new Date() : new Date(this.date);
+      const dToString =
+        ((d.getMonth() + 1).toString().length == 1 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1)) + "/" +
+        (d.getDate().toString().length == 1 ? '0' + d.getDate() : d.getDate()) + "/" +
+        d.getFullYear();
+      return dToString;
+    },
+
+    checkIfDateHasChanged() {
+      if (this.date == null || this.date2 == null) {
+        return false;
+      }
+
+      const d = new Date(this.date)
+      const dToString = d.getMonth() + 1 + "/" + d.getDate() + "/" + d.getFullYear();
+      const d2 = new Date(this.date2)
+      const d2ToString = d2.getMonth() + 1 + "/" + d2.getDate() + "/" + d2.getFullYear();
+
+      return dToString == d2ToString
+    },
+  },
+
+  mounted() {
+    let temp = new Date().getTime()
+    this.date = new Date(temp + 1 * 24 * 60 * 60 * 1000)
+  },
+
   methods: {
-    submitForm() {},
+    submitForm() {
+      const data = {
+        name: this.name,
+        email: this.email,
+        carType: this.carType,
+        services: this.services,
+        date: this.date,
+        timeSlot: this.timeSlot,
+      };
+      
+      if (new Date(this.date) < new Date()) {
+        this.message = "Please select a date later than today!"
+        return
+      } else {
+        this.message = null
+      }
+
+      axios
+        .post(process.env.VUE_APP_BACKEND + "/api/appointment/new", data)
+        .then((res) => {
+          localStorage.setItem("name", this.name)
+          window.location.href = "/appointment";
+        })
+        .catch((e) => {
+          this.message =
+            e.response === undefined
+              ? "Cannot connect to backend. Please wait and try again"
+              : e.response.data.message;
+        });
+    },
+
+    // handleDate(d) {
+    //   this.date = d;
+    // },
+
+    returnSlotAvailability() {
+      if (this.date == null) {
+        this.message = "Please select a date.";
+        return;
+      }
+
+      if (new Date(this.date) < new Date()) {
+        this.message = "Please select a date later than today!"
+        return
+      } else {
+        this.message = null
+      }
+
+      const data = {
+        date: this.date,
+      };
+
+      axios
+        .post(
+          process.env.VUE_APP_BACKEND +
+            "/api/appointment/new/checkSlotAvailable",
+          data
+        )
+        .then((res) => {
+          this.availableTimeSlotList = res.data.timeSlots;
+          this.date2 = this.date;
+          this.message = null;
+
+          Object.keys(this.availableTimeSlotList).forEach((slot) => {
+            if (this.availableTimeSlotList[slot].length >= 3) {
+              delete this.availableTimeSlotList[slot];
+            }
+          });
+        })
+        .catch((e) => {
+          this.message =
+            e.response === undefined
+              ? "Cannot connect to backend. Please wait and try again"
+              : e.response.data.message;
+        });
+    },
+
+    slotValues(s) {
+      switch (s) {
+        case "0900":
+          return "9.00am - 12.00pm";
+        case "1400":
+          return "2.00pm - 5.00pm";
+        case "1800":
+          return "6.00pm - 9.00pm";
+        default:
+          return "";
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss">
-#appt-new {}
+#appt-new {
+  form {
+    .date-div {
+      fieldset {
+        border: 1px solid rgb(87, 87, 87);
+        border-radius: 0.2rem;
+        background: rgba(255, 255, 255, 0.5);
+        color: #000;
+        font: 0.9rem "Gotham-Book";
+        margin: -0.5rem 0 0.5rem 0;
+      }
+
+      .date-input {
+        font: 1.2rem "Gotham-Book";
+        background: none;
+        border: 0;
+        outline: none;
+        text-align: center;
+        width: 100%;
+      }
+
+      .date-input::placeholder {
+        opacity: 1;
+      }
+    }
+  }
+}
 </style>

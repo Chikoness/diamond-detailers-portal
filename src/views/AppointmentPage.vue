@@ -11,26 +11,26 @@
             >New Appointment</ion-button
           >
 
-          <form @submit.prevent="submitApptId">
+          <form @submit.prevent="submitApptId" :class="{dark: checkUserType !== 'customer'}">
             <div class="input-group">
               <ion-input
                 label="Enter your Appointment ID"
                 label-placement="stacked"
                 fill="outline"
+                v-model="id"
                 required
               ></ion-input>
-              <br />
-              <ion-input
+              <!-- <ion-input
                 v-if="checkUserType == 'customer'"
                 label="Enter your Email"
                 type="email"
                 label-placement="stacked"
                 fill="outline"
                 required
-              ></ion-input>
+              ></ion-input> -->
             </div>
             <div class="form-btn">
-              <ion-button color="warning" type="submit">Submit</ion-button>
+              <ion-button :color="checkUserType == 'customer' ? 'warning' : 'light'" type="submit">Submit</ion-button>
             </div>
           </form>
         </div>
@@ -41,6 +41,7 @@
 
 <script>
 import { IonContent, IonPage, IonButton, IonInput } from "@ionic/vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -62,9 +63,40 @@ export default {
     },
   },
 
+  data() {
+    return {
+      id: null
+    }
+  },
+
+  mounted() {
+    if (localStorage.getItem("id") !== null) {
+      localStorage.removeItem('id');
+    }
+  },
+
   methods: {
     submitApptId() {
-      window.location.href = "/appointment/edit";
+      console.log(this.id)
+
+      const data = {
+        id: this.id
+      }
+
+      axios
+        .post(process.env.VUE_APP_BACKEND + "/api/appointment/get", data)
+        .then((res) => {
+          localStorage.setItem("id", this.id)
+
+          window.location.href = "/appointment/edit";
+        })
+        .catch((e) => {
+          this.message =
+            e.response === undefined
+              ? "Cannot connect to backend. Please wait and try again"
+              : e.response.data.message;
+        });
+
     },
   },
 };

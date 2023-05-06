@@ -14,7 +14,7 @@
               ></ion-input>
             </div>
             <div class="form-btn">
-              <ion-button type="submit" color="warning">Submit</ion-button>
+              <ion-button type="submit" color="light">Submit</ion-button>
             </div>
             <p class="error">{{ message }}</p>
           </form>
@@ -39,8 +39,8 @@ export default {
   data() {
     return {
       icNumber: null,
-      message: null
-    }
+      message: null,
+    };
   },
 
   computed: {
@@ -58,22 +58,27 @@ export default {
   methods: {
     submitICNumber() {
       const data = {
-        icNumber: this.icNumber
+        icNumber: this.icNumber,
       };
 
       axios
         .post(process.env.VUE_APP_BACKEND + "/api/employees/authenticate", data)
         .then((res) => {
-          localStorage.setItem("name", res.data.name)
+          localStorage.setItem("name", res.data.name);
           localStorage.setItem("icNumber", res.data.icNumber);
-          localStorage.setItem("securityLvl", res.data.securityLvl)
-          localStorage.setItem("type", res.data.securityLvl == 1 ? "employer" : "employee")
+          localStorage.setItem("securityLvl", res.data.securityLvl);
+          localStorage.setItem(
+            "type",
+            res.data.securityLvl == 1 ? "employer" : "employee"
+          );
 
           window.location.href = "/employee";
         })
         .catch((e) => {
-            this.message = "Cannot connect to backend. Please wait and try again."
-          
+          this.message =
+            e.response === undefined
+              ? "Cannot connect to backend. Please wait and try again"
+              : e.response.data.message;
         });
     },
   },
@@ -105,11 +110,6 @@ export default {
     form {
       p {
         margin-bottom: 1rem;
-      }
-
-      .error {
-        margin-top: 1.5rem;
-        color: red;
       }
     }
   }

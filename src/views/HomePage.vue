@@ -150,13 +150,18 @@ form {
   .input-group {
     ion-input, ion-select {
       --highlight-color-focused: #000;
-      --background: rgba(255, 255, 255, 0.4);
+      --background: rgba(255, 255, 255, 0.5);
       --color: #000 ;
       color: #000;
       margin-bottom: 0.5rem;
+
+      &.input-disabled {
+        opacity: 0.8;
+        --background: rgba(255, 255, 255, 0.1);
+      }
     }
 
-    margin-bottom: 2rem;
+    /* margin-bottom: 2rem; */
 
   }
   
@@ -178,6 +183,11 @@ form {
         --background: rgba(255, 255, 255, 1);
         --color: #000;
         color: #000;
+
+        &.input-disabled {
+          opacity: 0.8;
+          --background: rgba(255, 255, 255, 0.1);
+        }
       }
     }
   }
@@ -192,6 +202,11 @@ form {
   ion-button {
     border: 1px solid #000;
   }
+}
+
+.error {
+  margin-top: 1.5rem;
+  color: red;
 }
 // <-- Global css theme end --> 
 

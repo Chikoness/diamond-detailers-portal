@@ -1,14 +1,24 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="true" v-if="getId && isLoaded">
       <div id="appt-exist" class="container">
-        <form @submit.prevent="submitForm">
+        <ion-button
+          class="input-dirt"
+          color="dark"
+          v-if="checkUserType !== 'customer'"
+          >Input Dirt Level</ion-button
+        >
+        <form
+          @submit.prevent="editForm"
+          :class="{ dark: checkUserType !== 'customer' }"
+        >
           <div class="input-group">
             <ion-input
               label="Name"
               fill="outline"
               label-placement="stacked"
               v-model="formDetails.name"
+              disabled
               required
             ></ion-input>
             <ion-input
@@ -16,26 +26,26 @@
               fill="outline"
               label-placement="stacked"
               v-model="formDetails.email"
+              disabled
               required
               type="email"
             ></ion-input>
             <ion-select
-              label="Select Car Type"
               interface="popover"
+              label="Select Car Type"
               fill="outline"
               label-placement="stacked"
+              v-model="formDetails.carType"
               required
-              @ionChange="formDetails.car = $event.target.value"
+              @ionChange="formDetails.carType = $event.target.value"
             >
-              <ion-select-option value="proton saga"
-                >Proton Saga</ion-select-option
+              <ion-select-option
+                v-for="(car, id) in cars"
+                :key="car"
+                :value="id"
               >
-              <ion-select-option value="proton exora"
-                >Proton Exora</ion-select-option
-              >
-              <ion-select-option value="proton x50"
-                >Proton x50</ion-select-option
-              >
+                {{ car }}
+              </ion-select-option>
             </ion-select>
             <ion-select
               label="Select services needed"
@@ -43,48 +53,98 @@
               :multiple="true"
               fill="outline"
               label-placement="stacked"
+              v-model="formDetails.services"
               required
               @ionChange="formDetails.services = $event.target.value"
             >
-              <ion-select-option value="premium wash"
+              <ion-select-option value="premium-wash"
                 >Premium Wash</ion-select-option
               >
-              <ion-select-option value="wash & vacuum"
-                >Wash & Vacuum</ion-select-option
-              >
-              <ion-select-option value="sealant solution"
+              <ion-select-option value="sealant-solution"
                 >Sealant Solution</ion-select-option
               >
             </ion-select>
-            <ion-input
+            <!-- <ion-input
               label="Date"
-              type="date"
-              fill="outline"
+              :value="date"
               label-placement="stacked"
-              @ionChange="car = $event.target.value"
+              fill="outline"
+              :type="typ"
+              :ionFocus="typ='date'"
+              :ionBlur="typ='text'"
+              @ionChange="formDetails.date = $event.target.value"
               v-model="formDetails.date"
-            ></ion-input>
+              @input="handleDate($event.target.value)"
+            ></ion-input> -->
+            <div class="date-div">
+              <fieldset>
+                <legend>Date</legend>
+                <input
+                  :placeholder="dateToString"
+                  class="date-input"
+                  v-model="dateToString"
+                  :type="type"
+                  onfocus="(this.type='date')"
+                  onblur="(this.type='text')"
+                  name="date"
+                  @change="formDetails.date = $event.target.value"
+                />
+              </fieldset>
+            </div>
             <ion-select
+              v-if="checkIfDateHasChanged"
               label="Time slot"
               interface="popover"
               fill="outline"
               label-placement="stacked"
               required
-              @ionChange="formDetails.slot = $event.target.value"
-              v-model="formDetails.slot"
+              @ionChange="formDetails.timeSlot = $event.target.value"
+              v-model="formDetails.timeSlot"
             >
-              <ion-select-option value="apples">9:00 a.m.</ion-select-option>
-              <ion-select-option value="oranges">10:00 a.m.</ion-select-option>
-              <ion-select-option value="bananas">11:00 a.m.</ion-select-option>
+              <ion-select-option
+                v-for="(slot, name) in availableTimeSlotList"
+                :key="slot"
+                :value="name"
+                >{{ slotValues(name) }}</ion-select-option
+              >
             </ion-select>
+            <ion-input
+              label="Status"
+              fill="outline"
+              label-placement="stacked"
+              v-model="formDetails.status"
+              :disabled="!isEmployee"
+              required
+            ></ion-input>
           </div>
 
           <div class="form-btn">
-            <ion-button type="submit">Edit</ion-button>
-            <ion-button type="reset" color="danger">Delete</ion-button>
+            <ion-button
+              v-if="!checkIfDateHasChanged"
+              color="warning"
+              @click="returnSlotAvailability"
+              >Check slot availability</ion-button
+            >
+            <ion-button
+              v-else
+              type="submit"
+              :color="checkUserType == 'customer' ? 'warning' : 'light'"
+              >Edit</ion-button
+            >
+            <ion-button color="danger" @click="deletePopUp = true"
+              >Delete</ion-button
+            >
+            {{ message }}
           </div>
         </form>
       </div>
+
+      <popup-box
+        v-if="deletePopUp"
+        :isEmployee="checkUserType !== 'customer'"
+        @close="deletePopUp = false"
+        @click="$event.target.id === 'popup' ? (deletePopUp = false) : ''"
+      />
     </ion-content>
   </ion-page>
 </template>
@@ -97,6 +157,9 @@ import {
   IonSelect,
   IonSelectOption,
 } from "@ionic/vue";
+import PopupBox from "@/components/PopupBox.vue";
+import { cars } from "@/data/cars";
+import axios from "axios";
 
 export default {
   components: {
@@ -105,28 +168,234 @@ export default {
     IonInput,
     IonSelect,
     IonSelectOption,
+    PopupBox,
+  },
+
+  mounted() {
+    if (!this.getId) {
+      window.location.href = "/appointment";
+    }
+
+    axios
+      .post(process.env.VUE_APP_BACKEND + "/api/appointment/get", {
+        id: localStorage.getItem("id"),
+      })
+
+      .then((res) => {
+        this.formDetails = res.data.data;
+        this.timeSlot2 = this.formDetails.timeSlot
+        this.oldDate = this.formDetails.date
+
+        axios
+          .post(
+            process.env.VUE_APP_BACKEND +
+              "/api/appointment/new/checkSlotAvailable",
+            { date: this.formDetails.date }
+          )
+          .then((res) => {
+            this.availableTimeSlotList = res.data.timeSlots;
+            this.date2 = this.formDetails.date;
+            this.message = null;
+
+            Object.keys(this.availableTimeSlotList).forEach((slot) => {
+              if (this.availableTimeSlotList[slot].length >= 3) {
+                delete this.availableTimeSlotList[slot];
+              }
+            });
+
+            this.isLoaded = true;
+          })
+          .catch((e) => {
+            this.message =
+              e.response === undefined
+                ? "Cannot connect to backend. Please wait and try again"
+                : e.response.data.message;
+          });
+      })
+      .catch(() => {
+        window.location.href = "/appointment";
+      });
+  },
+
+  computed: {
+    dateToString() {
+      const d = new Date(this.formDetails.date);
+      const dToString =
+        ((d.getMonth() + 1).toString().length == 1 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1)) + "/" +
+        d.getDate() + "/" +
+        d.getFullYear();
+      return dToString;
+    },
+
+    checkIfDateHasChanged() {
+      const d = new Date(this.formDetails.date)
+      const dToString = d.getMonth() + 1 + "/" + d.getDate() + "/" + d.getFullYear();
+      const d2 = new Date(this.date2)
+      const d2ToString = d2.getMonth() + 1 + "/" + d2.getDate() + "/" + d2.getFullYear();
+
+      return dToString == d2ToString
+    },
+
+    checkUserType() {
+      const type = localStorage.getItem("type");
+
+      if (type == null) {
+        return "customer";
+      }
+
+      return type;
+    },
+
+    getId() {
+      return localStorage.getItem("id");
+    },
   },
 
   data() {
     return {
-      formDetails: {
-        name: "Clarissa Y.",
-        email: "clarissa@gmail.com",
-        car: "Proton Saga",
-        services: ["Premium Wash", "Sealant Solution"],
-        date: "12-12-2022",
-        slot: "9:00 a.m.",
-      },
+      isLoaded: false,
+      cars,
+      formDetails: {},
       editModeOn: false,
+      deletePopUp: false,
+      availableTimeSlotList: null,
+      date2: null,
+      oldDate: null,
+      timeSlot2: null,
+      message: null
     };
   },
 
   methods: {
-    submitForm() {},
+    editForm() {
+      const convertDate = new Date(this.formDetails.date)
+      const convertOldDate = new Date(this.oldDate)
+      this.formDetails.date = 
+        convertDate.getFullYear() + "/" + 
+        ((convertDate.getMonth() + 1).toString().length == 1 ? '0' + (convertDate.getMonth() + 1) : (convertDate.getMonth() + 1)) + "/" + 
+        convertDate.getDate();
+      
+      this.oldDate =
+        convertOldDate.getFullYear() + "/" + 
+        ((convertOldDate.getMonth() + 1).toString().length == 1 ? '0' + (convertOldDate.getMonth() + 1) : (convertOldDate.getMonth() + 1)) + "/" + 
+        convertOldDate.getDate();
+
+      const data = {
+        id: localStorage.getItem("id"),
+        carType: this.formDetails.carType,
+        services: this.formDetails.services,
+        date: this.formDetails.date,
+        oldDate: this.oldDate,
+        timeSlot: this.formDetails.timeSlot,
+        oldTimeSlot: this.timeSlot2,
+        status: this.formDetails.status
+      }
+
+      axios
+        .post(
+          process.env.VUE_APP_BACKEND +
+            "/api/appointment/edit",
+          data
+        )
+        .then(() => {
+          console.log("success edit!")
+          window.location.href = "/appointment"
+        })
+        .catch((e) => {
+          this.message =
+            e.response === undefined
+              ? "Cannot connect to backend. Please wait and try again"
+              : e.response.data.message;
+        });
+    },
+
+    slotValues(s) {
+      switch (s) {
+        case "0900":
+          return "9.00am - 12.00pm";
+        case "1400":
+          return "2.00pm - 5.00pm";
+        case "1800":
+          return "6.00pm - 9.00pm";
+        default:
+          return "";
+      }
+    },
+
+    returnSlotAvailability() {
+      if (this.formDetails.date == null) {
+        this.message = "Please select a date.";
+        return;
+      }
+
+      const data = {
+        date: this.formDetails.date,
+      };
+
+      axios
+        .post(
+          process.env.VUE_APP_BACKEND +
+            "/api/appointment/new/checkSlotAvailable",
+          data
+        )
+        .then((res) => {
+          this.availableTimeSlotList = res.data.timeSlots;
+          this.date2 = this.formDetails.date;
+          this.message = null;
+
+          Object.keys(this.availableTimeSlotList).forEach((slot) => {
+            if (this.availableTimeSlotList[slot].length >= 3) {
+              delete this.availableTimeSlotList[slot];
+            }
+          });
+        })
+        .catch((e) => {
+          this.message =
+            e.response === undefined
+              ? "Cannot connect to backend. Please wait and try again"
+              : e.response.data.message;
+        });
+    }
   },
 };
 </script>
 
 <style lang="scss">
-#appt-exist {}
+#appt-exist {
+  margin-top: 1.2rem;
+
+  .input-dirt {
+    width: 60%;
+    box-shadow: rgba(255, 255, 255, 0.4) 0px 5px,
+      rgba(255, 255, 255, 0.3) 0px 10px, rgba(255, 255, 255, 0.2) 0px 15px,
+      rgba(255, 255, 255, 0.1) 0px 20px, rgba(255, 255, 255, 0.05) 0px 25px;
+    margin: 0 auto 1.2rem auto;
+  }
+
+  form {
+    .date-div {
+      fieldset {
+        border: 1px solid rgb(87, 87, 87);
+        border-radius: 0.2rem;
+        background: rgba(255, 255, 255, 0.5);
+        color: #000;
+        font: 0.9rem "Gotham-Book";
+        margin: -0.5rem 0 0.5rem 0;
+      }
+
+      .date-input {
+        font: 1.2rem "Gotham-Book";
+        background: none;
+        border: 0;
+        outline: none;
+        text-align: center;
+        width: 100%;
+      }
+
+      .date-input::placeholder {
+        opacity: 1;
+      }
+    }
+  }
+}
 </style>

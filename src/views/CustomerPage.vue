@@ -25,6 +25,12 @@ export default {
     IonButton,
   },
 
+  mounted() {
+    if (localStorage.getItem("id") !== null) {
+      localStorage.removeItem('id');
+    }
+  },
+
   computed: {
     customerName() {
       return localStorage.getItem("name")
