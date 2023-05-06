@@ -27,15 +27,13 @@
               required
               @ionChange="carType = $event.target.value"
             >
-              <ion-select-option value="proton-saga"
-                >Proton Saga</ion-select-option
+              <ion-select-option
+                v-for="(car, id) in cars"
+                :key="car"
+                :value="id"
               >
-              <ion-select-option value="proton-exora"
-                >Proton Exora</ion-select-option
-              >
-              <ion-select-option value="proton-x50"
-                >Proton x50</ion-select-option
-              >
+                {{ car }}
+              </ion-select-option>
             </ion-select>
             <ion-select
               label="Select services needed"
@@ -46,26 +44,16 @@
               required
               @ionChange="services = $event.target.value"
             >
-              <ion-select-option value="premium wash"
-                >Premium Wash</ion-select-option
+              <ion-select-option
+                v-for="service in availableServices"
+                :key="service.name"
+                :value="service.name"
               >
-              <ion-select-option value="wash & vacuum"
-                >Wash & Vacuum</ion-select-option
-              >
-              <ion-select-option value="sealant solution"
-                >Sealant Solution</ion-select-option
-              >
+                {{ service.display }}
+              </ion-select-option>
             </ion-select>
-            <!-- <ion-input
-              label="Date"
-              :value="date"
-              type="date"
-              label-placement="stacked"
-              fill="outline"
-              @input="handleDate($event.target.value)"
-            ></ion-input> -->
             <div class="date-div">
-              <fieldset>
+              <fieldset :class="checkUserType == 'customer' ? '' : 'employee'">
                 <legend>Date</legend>
                 <input
                   :placeholder="dateToString"
@@ -104,7 +92,7 @@
               @click="returnSlotAvailability"
               >Check slot availability</ion-button
             >
-            <ion-button v-else type="submit">Submit</ion-button>
+            <ion-button v-else @click="calculateFullPrice()">Submit</ion-button>
 
             <ion-button type="reset" color="light">Clear</ion-button>
           </div>
@@ -112,6 +100,23 @@
           <p class="error">{{ message }}</p>
         </form>
       </div>
+
+      <popup-box
+        v-if="openPopUp"
+        :isEmployee="checkUserType !== 'customer'"
+        message="Confirm appointment?"
+        :message2="
+          'Date: ' +
+          dateToString +
+          ' @ ' +
+          slotValues(timeSlot)
+        "
+        :message3="'Price: RM' + price.toFixed(2)"
+        :displayButtons="true"
+        @close="openPopUp = false"
+        @click="$event.target.id === 'popup' ? (openPopUp = false) : ''"
+        @confirm="submitForm"
+      />
     </ion-content>
   </ion-page>
 </template>
@@ -125,6 +130,8 @@ import {
   IonSelectOption,
 } from "@ionic/vue";
 import axios from "axios";
+import { cars } from "@/data/cars";
+import PopupBox from "../../components/PopupBox.vue";
 
 export default {
   components: {
@@ -133,10 +140,13 @@ export default {
     IonInput,
     IonSelect,
     IonSelectOption,
+    PopupBox,
   },
 
   data() {
     return {
+      cars,
+
       name: null,
       email: null,
       carType: null,
@@ -146,8 +156,12 @@ export default {
       timeSlot: null,
 
       message: null,
+      openPopUp: false,
 
       availableTimeSlotList: null,
+      availableServices: null,
+
+      price: 0,
     };
   },
 
@@ -155,8 +169,12 @@ export default {
     dateToString() {
       const d = this.date == null ? new Date() : new Date(this.date);
       const dToString =
-        ((d.getMonth() + 1).toString().length == 1 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1)) + "/" +
-        (d.getDate().toString().length == 1 ? '0' + d.getDate() : d.getDate()) + "/" +
+        ((d.getMonth() + 1).toString().length == 1
+          ? "0" + (d.getMonth() + 1)
+          : d.getMonth() + 1) +
+        "/" +
+        (d.getDate().toString().length == 1 ? "0" + d.getDate() : d.getDate()) +
+        "/" +
         d.getFullYear();
       return dToString;
     },
@@ -166,18 +184,47 @@ export default {
         return false;
       }
 
-      const d = new Date(this.date)
-      const dToString = d.getMonth() + 1 + "/" + d.getDate() + "/" + d.getFullYear();
-      const d2 = new Date(this.date2)
-      const d2ToString = d2.getMonth() + 1 + "/" + d2.getDate() + "/" + d2.getFullYear();
+      const d = new Date(this.date);
+      const dToString =
+        d.getMonth() + 1 + "/" + d.getDate() + "/" + d.getFullYear();
+      const d2 = new Date(this.date2);
+      const d2ToString =
+        d2.getMonth() + 1 + "/" + d2.getDate() + "/" + d2.getFullYear();
 
-      return dToString == d2ToString
+      return dToString == d2ToString;
+    },
+
+    checkUserType() {
+      const type = localStorage.getItem("type");
+
+      if (type == null) {
+        return "customer";
+      }
+
+      return type;
     },
   },
 
   mounted() {
-    let temp = new Date().getTime()
-    this.date = new Date(temp + 1 * 24 * 60 * 60 * 1000)
+    if (this.checkUserType !== 'customer') {
+      window.location.href = "/employee"
+      return;
+    }
+
+    let temp = new Date().getTime();
+    this.date = new Date(temp + 1 * 24 * 60 * 60 * 1000);
+
+    axios
+      .get(process.env.VUE_APP_BACKEND + "/api/appointment/new/getAllServices")
+      .then((res) => {
+        this.availableServices = res.data.data;
+      })
+      .catch((e) => {
+        this.message =
+          e.response === undefined
+            ? "Cannot connect to backend. Please wait and try again"
+            : e.response.data.message;
+      });
   },
 
   methods: {
@@ -190,19 +237,20 @@ export default {
         date: this.date,
         timeSlot: this.timeSlot,
       };
-      
+
       if (new Date(this.date) < new Date()) {
-        this.message = "Please select a date later than today!"
-        return
+        this.message = "Please select a date later than today!";
+        return;
       } else {
-        this.message = null
+        this.message = null;
       }
 
       axios
         .post(process.env.VUE_APP_BACKEND + "/api/appointment/new", data)
         .then((res) => {
-          localStorage.setItem("name", this.name)
-          window.location.href = "/appointment";
+          localStorage.setItem("name", this.name);
+          localStorage.setItem("id", res.data.id);
+          window.location.href = "/confirmation/makeAppt";
         })
         .catch((e) => {
           this.message =
@@ -223,10 +271,10 @@ export default {
       }
 
       if (new Date(this.date) < new Date()) {
-        this.message = "Please select a date later than today!"
-        return
+        this.message = "Please select a date later than today!";
+        return;
       } else {
-        this.message = null
+        this.message = null;
       }
 
       const data = {
@@ -270,6 +318,25 @@ export default {
           return "";
       }
     },
+
+    calculateFullPrice() {
+      axios
+        .post(
+          process.env.VUE_APP_BACKEND + "/api/appointment/new/getFullPrice",
+          { services: this.services }
+        )
+        .then((res) => {
+          this.price = res.data.price;
+        })
+        .catch((e) => {
+          this.message =
+            e.response === undefined
+              ? "Cannot connect to backend. Please wait and try again"
+              : e.response.data.message;
+        });
+
+      this.openPopUp = true;
+    },
   },
 };
 </script>
@@ -285,6 +352,10 @@ export default {
         color: #000;
         font: 0.9rem "Gotham-Book";
         margin: -0.5rem 0 0.5rem 0;
+
+        &.employee {
+          background: rgba(255, 255, 255, 1);
+        }
       }
 
       .date-input {

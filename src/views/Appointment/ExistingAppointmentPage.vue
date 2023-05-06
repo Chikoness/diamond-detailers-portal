@@ -57,27 +57,16 @@
               required
               @ionChange="formDetails.services = $event.target.value"
             >
-              <ion-select-option value="premium-wash"
-                >Premium Wash</ion-select-option
+              <ion-select-option
+                v-for="service in availableServices"
+                :key="service.name"
+                :value="service.name"
               >
-              <ion-select-option value="sealant-solution"
-                >Sealant Solution</ion-select-option
-              >
+                {{ service.display }}
+              </ion-select-option>
             </ion-select>
-            <!-- <ion-input
-              label="Date"
-              :value="date"
-              label-placement="stacked"
-              fill="outline"
-              :type="typ"
-              :ionFocus="typ='date'"
-              :ionBlur="typ='text'"
-              @ionChange="formDetails.date = $event.target.value"
-              v-model="formDetails.date"
-              @input="handleDate($event.target.value)"
-            ></ion-input> -->
             <div class="date-div">
-              <fieldset>
+              <fieldset :class="checkUserType == 'customer' ? '' : 'employee'">
                 <legend>Date</legend>
                 <input
                   :placeholder="dateToString"
@@ -108,14 +97,19 @@
                 >{{ slotValues(name) }}</ion-select-option
               >
             </ion-select>
-            <ion-input
+            <ion-select
               label="Status"
+              interface="popover"
               fill="outline"
               label-placement="stacked"
-              v-model="formDetails.status"
-              :disabled="!isEmployee"
               required
-            ></ion-input>
+              @ionChange="formDetails.status = $event.target.value"
+              :disabled="checkUserType == 'customer'"
+              v-model="formDetails.status"
+            >
+              <ion-select-option value="Pending">Pending</ion-select-option>
+              <ion-select-option value="Paid">Paid</ion-select-option>
+            </ion-select>
           </div>
 
           <div class="form-btn">
@@ -134,7 +128,7 @@
             <ion-button color="danger" @click="deletePopUp = true"
               >Delete</ion-button
             >
-            {{ message }}
+            <p class="error">{{ message }}</p>
           </div>
         </form>
       </div>
@@ -142,8 +136,11 @@
       <popup-box
         v-if="deletePopUp"
         :isEmployee="checkUserType !== 'customer'"
+        message="Are you sure you would to delete your appointment?"
+        :displayButtons="true"
         @close="deletePopUp = false"
         @click="$event.target.id === 'popup' ? (deletePopUp = false) : ''"
+        @confirm="confirmDelete"
       />
     </ion-content>
   </ion-page>
@@ -183,8 +180,8 @@ export default {
 
       .then((res) => {
         this.formDetails = res.data.data;
-        this.timeSlot2 = this.formDetails.timeSlot
-        this.oldDate = this.formDetails.date
+        this.timeSlot2 = this.formDetails.timeSlot;
+        this.oldDate = this.formDetails.date;
 
         axios
           .post(
@@ -203,7 +200,22 @@ export default {
               }
             });
 
-            this.isLoaded = true;
+            axios
+              .get(
+                process.env.VUE_APP_BACKEND +
+                  "/api/appointment/new/getAllServices"
+              )
+              .then((res) => {
+                this.availableServices = res.data.data;
+
+                this.isLoaded = true;
+              })
+              .catch((e) => {
+                this.message =
+                  e.response === undefined
+                    ? "Cannot connect to backend. Please wait and try again"
+                    : e.response.data.message;
+              });
           })
           .catch((e) => {
             this.message =
@@ -221,19 +233,27 @@ export default {
     dateToString() {
       const d = new Date(this.formDetails.date);
       const dToString =
-        ((d.getMonth() + 1).toString().length == 1 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1)) + "/" +
-        d.getDate() + "/" +
+        ((d.getMonth() + 1).toString().length == 1
+          ? "0" + (d.getMonth() + 1)
+          : d.getMonth() + 1) +
+        "/" +
+        ((d.getDate()).toString().length == 1
+          ? "0" + (d.getDate())
+          : d.getDate()) +
+        "/" +
         d.getFullYear();
       return dToString;
     },
 
     checkIfDateHasChanged() {
-      const d = new Date(this.formDetails.date)
-      const dToString = d.getMonth() + 1 + "/" + d.getDate() + "/" + d.getFullYear();
-      const d2 = new Date(this.date2)
-      const d2ToString = d2.getMonth() + 1 + "/" + d2.getDate() + "/" + d2.getFullYear();
+      const d = new Date(this.formDetails.date);
+      const dToString =
+        d.getMonth() + 1 + "/" + d.getDate() + "/" + d.getFullYear();
+      const d2 = new Date(this.date2);
+      const d2ToString =
+        d2.getMonth() + 1 + "/" + d2.getDate() + "/" + d2.getFullYear();
 
-      return dToString == d2ToString
+      return dToString == d2ToString;
     },
 
     checkUserType() {
@@ -259,25 +279,36 @@ export default {
       editModeOn: false,
       deletePopUp: false,
       availableTimeSlotList: null,
+      availableServices: null,
       date2: null,
       oldDate: null,
       timeSlot2: null,
-      message: null
+      message: null,
     };
   },
 
   methods: {
     editForm() {
-      const convertDate = new Date(this.formDetails.date)
-      const convertOldDate = new Date(this.oldDate)
-      this.formDetails.date = 
-        convertDate.getFullYear() + "/" + 
-        ((convertDate.getMonth() + 1).toString().length == 1 ? '0' + (convertDate.getMonth() + 1) : (convertDate.getMonth() + 1)) + "/" + 
-        convertDate.getDate();
-      
+      const convertDate = new Date(this.formDetails.date);
+      const convertOldDate = new Date(this.oldDate);
+      this.formDetails.date =
+        convertDate.getFullYear() +
+        "/" +
+        ((convertDate.getMonth() + 1).toString().length == 1
+          ? "0" + (convertDate.getMonth() + 1)
+          : convertDate.getMonth() + 1) +
+        "/" +
+        ((convertDate.getDate()).toString().length == 1
+          ? "0" + (convertDate.getDate())
+          : convertDate.getDate());
+
       this.oldDate =
-        convertOldDate.getFullYear() + "/" + 
-        ((convertOldDate.getMonth() + 1).toString().length == 1 ? '0' + (convertOldDate.getMonth() + 1) : (convertOldDate.getMonth() + 1)) + "/" + 
+        convertOldDate.getFullYear() +
+        "/" +
+        ((convertOldDate.getMonth() + 1).toString().length == 1
+          ? "0" + (convertOldDate.getMonth() + 1)
+          : convertOldDate.getMonth() + 1) +
+        "/" +
         convertOldDate.getDate();
 
       const data = {
@@ -288,18 +319,40 @@ export default {
         oldDate: this.oldDate,
         timeSlot: this.formDetails.timeSlot,
         oldTimeSlot: this.timeSlot2,
-        status: this.formDetails.status
-      }
+        status: this.formDetails.status,
+      };
 
       axios
-        .post(
-          process.env.VUE_APP_BACKEND +
-            "/api/appointment/edit",
-          data
-        )
+        .post(process.env.VUE_APP_BACKEND + "/api/appointment/edit", data)
         .then(() => {
-          console.log("success edit!")
-          window.location.href = "/appointment"
+          console.log("success edit!");
+          window.location.href = this.checkUserType == 'customer' ? "/confirmation/editAppt" : "/employee";
+        })
+        .catch((e) => {
+          this.message =
+            e.response === undefined
+              ? "Cannot connect to backend. Please wait and try again"
+              : e.response.data.message;
+        });
+    },
+
+    confirmDelete() {
+      const data = {
+        id: localStorage.getItem("id"),
+        carType: this.formDetails.carType,
+        services: this.formDetails.services,
+        date: this.formDetails.date,
+        oldDate: this.oldDate,
+        timeSlot: this.formDetails.timeSlot,
+        oldTimeSlot: this.timeSlot2,
+        status: this.formDetails.status,
+      };
+
+      axios
+        .post(process.env.VUE_APP_BACKEND + "/api/appointment/delete", data)
+        .then(() => {
+          console.log("success delete!");
+          window.location.href = this.checkUserType == 'customer' ? "/confirmation/deleteAppt" : '/employee';
         })
         .catch((e) => {
           this.message =
@@ -355,7 +408,7 @@ export default {
               ? "Cannot connect to backend. Please wait and try again"
               : e.response.data.message;
         });
-    }
+    },
   },
 };
 </script>
@@ -381,6 +434,10 @@ export default {
         color: #000;
         font: 0.9rem "Gotham-Book";
         margin: -0.5rem 0 0.5rem 0;
+
+        &.employee {
+          background: rgba(255, 255, 255, 1)
+        }
       }
 
       .date-input {

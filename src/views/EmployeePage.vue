@@ -34,6 +34,10 @@ export default {
     if (!this.isEmployerEmployee) {
       window.location.href = "/authentication";
     }
+
+    if (localStorage.getItem("id") !== null) {
+      localStorage.removeItem('id');
+    }
   },
 
   computed: {

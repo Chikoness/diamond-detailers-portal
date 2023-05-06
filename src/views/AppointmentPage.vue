@@ -20,18 +20,13 @@
                 v-model="id"
                 required
               ></ion-input>
-              <!-- <ion-input
-                v-if="checkUserType == 'customer'"
-                label="Enter your Email"
-                type="email"
-                label-placement="stacked"
-                fill="outline"
-                required
-              ></ion-input> -->
             </div>
             <div class="form-btn">
               <ion-button :color="checkUserType == 'customer' ? 'warning' : 'light'" type="submit">Submit</ion-button>
             </div>
+            <p class="error">
+              {{ message }}
+            </p>
           </form>
         </div>
       </div>
@@ -65,7 +60,8 @@ export default {
 
   data() {
     return {
-      id: null
+      id: null,
+      message: null
     }
   },
 
