@@ -8,7 +8,7 @@
           <ion-button color="warning" href="/appointment"
             >Appointment</ion-button
           >
-          <ion-button color="warning">Display Statistics</ion-button>
+          <ion-button color="warning">History</ion-button>
         </div>
       </div>
     </ion-content>

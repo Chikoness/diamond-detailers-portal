@@ -20,7 +20,7 @@
             >Check Appointment</ion-button
           >
 
-          <form @submit.prevent="submitICNumber" class="dark">
+          <form @submit.prevent="submitICNumber" class="dark" v-if="isEmployer">
             <div class="input-group">
               <p>Enter your IC Number to view employer/employee page</p>
               <ion-input
