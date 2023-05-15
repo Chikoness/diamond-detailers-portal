@@ -2,16 +2,15 @@
   <ion-page>
     <ion-content :fullscreen="true">
       <div id="customer-appt" class="container">
-        <div class="list">
-          <ion-button
-            href="/appointment/new"
-            v-if="checkUserType == 'customer'"
-            color="warning"
-            class="appt-btn"
+        <div class="list" v-if="checkUserType == 'customer'">
+          <ion-button href="/appointment/new" color="warning" class="appt-btn"
             >New Appointment</ion-button
           >
 
-          <form @submit.prevent="submitApptId" :class="{dark: checkUserType !== 'customer'}">
+          <form
+            @submit.prevent="submitApptId"
+            :class="{ dark: checkUserType !== 'customer' }"
+          >
             <div class="input-group">
               <ion-input
                 label="Enter your Appointment ID"
@@ -22,13 +21,20 @@
               ></ion-input>
             </div>
             <div class="form-btn">
-              <ion-button :color="checkUserType == 'customer' ? 'warning' : 'light'" type="submit">Submit</ion-button>
+              <ion-button
+                :color="checkUserType == 'customer' ? 'warning' : 'light'"
+                type="submit"
+                >Submit</ion-button
+              >
             </div>
             <p class="error">
               {{ message }}
             </p>
           </form>
         </div>
+
+        <p class="title">Appointments</p>
+        <display-table-page v-if="checkUserType !== 'customer'" :data="appts" />
       </div>
     </ion-content>
   </ion-page>
@@ -37,6 +43,7 @@
 <script>
 import { IonContent, IonPage, IonButton, IonInput } from "@ionic/vue";
 import axios from "axios";
+import DisplayTablePage from "@/components/DisplayTablePage.vue";
 
 export default {
   components: {
@@ -44,6 +51,7 @@ export default {
     IonPage,
     IonButton,
     IonInput,
+    DisplayTablePage,
   },
 
   computed: {
@@ -61,26 +69,41 @@ export default {
   data() {
     return {
       id: null,
-      message: null
-    }
+      message: null,
+      appts: null,
+    };
   },
 
   mounted() {
     if (localStorage.getItem("id") !== null) {
-      localStorage.removeItem('id');
+      localStorage.removeItem("id");
+    }
+
+    if (this.checkUserType !== "customer") {
+      axios
+        .get(process.env.VUE_APP_BACKEND + "/api/appointment/all")
+        .then((res) => {
+          this.appts = res.data.data;
+        })
+        .catch((e) => {
+          this.message =
+            e.response === undefined
+              ? "Cannot connect to backend. Please wait and try again"
+              : e.response.data.message;
+        });
     }
   },
 
   methods: {
     submitApptId() {
       const data = {
-        id: this.id
-      }
+        id: this.id,
+      };
 
       axios
         .post(process.env.VUE_APP_BACKEND + "/api/appointment/get", data)
         .then((res) => {
-          localStorage.setItem("id", this.id)
+          localStorage.setItem("id", this.id);
 
           window.location.href = "/appointment/edit";
         })
@@ -102,6 +125,8 @@ export default {
   .title {
     margin: auto;
     text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
   }
 
   .list {
@@ -109,6 +134,7 @@ export default {
     flex-direction: column;
     align-items: center;
     margin: auto;
+    overflow-y: auto;
 
     .appt-btn {
       margin-bottom: 5rem;

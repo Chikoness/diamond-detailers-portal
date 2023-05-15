@@ -218,6 +218,16 @@ form {
   margin-top: 1.5rem;
   color: red;
 }
+
+@media (max-width: 500px) {
+  .logo {
+    &.small {
+      width: 10rem;
+      height: 10rem;
+    }
+  }
+}
+
 // <-- Global css theme end --> 
 
 #main {

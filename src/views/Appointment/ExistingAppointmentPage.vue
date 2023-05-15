@@ -109,6 +109,7 @@
             >
               <ion-select-option value="Pending">Pending</ion-select-option>
               <ion-select-option value="Paid">Paid</ion-select-option>
+              <ion-select-option value="Finished">Finished</ion-select-option>
             </ion-select>
           </div>
 
