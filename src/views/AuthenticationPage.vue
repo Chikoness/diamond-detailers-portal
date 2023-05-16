@@ -108,6 +108,8 @@ export default {
     margin: auto;
 
     form {
+      height: 100%;
+      
       p {
         margin-bottom: 1rem;
       }

@@ -1,14 +1,23 @@
 <template>
-  <div class="tbl-view">
-    <div class="row" v-for="d in removeFinishedAppointment" :key="d">
-      <ion-button
-        class="row-info"
-        color="dark"
-        :href="'/appointment/edit/' + d.id"
-        >{{ d.id }}</ion-button
-      >
-      <div class="row-email">{{ d.email }}</div>
+  <div class="tbl-view" :class="{ popup: popupSize }" v-if="data">
+    <div class="row" v-if="data.length == 0">
+      No data available to display
     </div>
+
+    <template v-for="d in data" :key="d">
+      <div
+        class="row"
+        :class="[{ finished: d.status == 'Finished' }, { popup: popupSize }]"
+      >
+        <ion-button
+          class="row-info"
+          :color="d.status == 'Finished' || d.securityLvl == 1 ? 'light' : 'dark'"
+          :href="isEmployee ? '/employee/edit/' + d.icNumber : '/appointment/edit/' + d.id"
+          >{{ isEmployee ? d.icNumber : d.id }}</ion-button
+        >
+        <div class="row-email">{{ isEmployee ? d.name : d.email }}</div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -16,30 +25,29 @@
 import { IonButton } from "@ionic/vue";
 
 export default {
-  props: ["data"],
+  props: ["data", "isEmployee", "popupSize"],
 
   components: {
     IonButton,
   },
 
-  computed: {
-    removeFinishedAppointment() {
-        let d = []
-        d = this.data.filter(dt => {
-            return dt.status !== 'Finished'
-        });
+  data() {
+    return {};
+  },
 
-        return d
-    }
-  }
+  computed: {},
 };
 </script>
 
 <style lang="scss">
 .tbl-view {
   height: 80%;
-  width: 86vw;
+  width: 86.5vw;
   overflow-y: auto;
+
+  &.popup {
+    width: 100%;
+  }
 
   .row {
     height: auto;
@@ -48,15 +56,27 @@ export default {
     justify-content: space-between;
     border: 1px solid #fff;
 
+    &.popup {
+      border: 1px solid #000;
+    }
+
+    &.finished {
+      background: #fff;
+      color: #000;
+    }
+
     .row-info {
-      padding: 0.2rem 0.5rem;
-      width: 13.5rem;
+      padding: 0.1rem 0.5rem;
+      width: 12rem;
+      margin: 0.3rem 0 !important;
+      box-shadow: none !important;
     }
 
     .row-email {
       padding: 0.3rem 1rem;
       font-size: 0.9rem;
       text-align: right;
+      margin: auto 0;
       overflow-x: auto;
     }
   }

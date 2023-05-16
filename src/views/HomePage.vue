@@ -99,20 +99,16 @@ div {
 .container {
   text-align: center;
   width: 100%;
-  height: 100%;
   padding: 0 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-top: 10rem;
+  height: 100%;
   
   &.employer {
     margin-top: 5rem;
     height: 80%;
-  }
-
-  &.employee {
-    margin-top: 10rem;
-    height: 50%;
   }
 }
 
@@ -143,6 +139,8 @@ ion-button {
 }
 
 form {
+  overflow-y: auto;
+  height: 75%;
   width: 100%;
   margin: auto;
   background-color: rgba(255, 213, 52, 0.9);

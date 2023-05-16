@@ -64,14 +64,16 @@
               v-model="formDetails.securityLvl"
               @ionChange="formDetails.securityLvl = $event.target.value"
             >
-              <ion-select-option :value=1>1</ion-select-option>
-              <ion-select-option :value=2>2</ion-select-option>
+              <ion-select-option :value="1">1</ion-select-option>
+              <ion-select-option :value="2">2</ion-select-option>
             </ion-select>
           </div>
 
           <div class="form-btn">
             <ion-button type="submit">Submit</ion-button>
-            <ion-button @click="openPopUp = true" color="danger">Delete</ion-button>
+            <ion-button @click="openPopUp = true" color="danger"
+              >Delete</ion-button
+            >
           </div>
 
           <p class="error">{{ message }}</p>
@@ -141,10 +143,12 @@ export default {
     }
 
     axios
-      .post(process.env.VUE_APP_BACKEND + "/api/employees/get", { icNumber: localStorage.getItem("icToCheck") })
+      .get(process.env.VUE_APP_BACKEND + "/api/employees/get", {
+        params: { icNumber: this.$route.params.id },
+      })
       .then((res) => {
         this.formDetails = res.data.user;
-        this.isLoaded = true
+        this.isLoaded = true;
       })
       .catch((e) => {
         this.message =
@@ -157,7 +161,10 @@ export default {
   methods: {
     submitForm() {
       axios
-        .post(process.env.VUE_APP_BACKEND + "/api/employees/edit", this.formDetails)
+        .post(
+          process.env.VUE_APP_BACKEND + "/api/employees/edit",
+          this.formDetails
+        )
         .then((res) => {
           window.location.href = "/employee";
         })
@@ -171,10 +178,13 @@ export default {
 
     confirmDelete() {
       axios
-        .post(process.env.VUE_APP_BACKEND + "/api/employees/delete", this.formDetails)
+        .post(
+          process.env.VUE_APP_BACKEND + "/api/employees/delete",
+          this.formDetails
+        )
         .then(() => {
           console.log("success delete!");
-          window.location.href = '/employee';
+          window.location.href = "/employee";
         })
         .catch((e) => {
           this.message =
@@ -189,5 +199,6 @@ export default {
     
 <style lang="scss">
 #emp-edit {
+  margin-top: 1.2rem;
 }
 </style>

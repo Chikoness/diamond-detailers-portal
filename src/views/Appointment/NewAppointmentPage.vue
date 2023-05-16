@@ -343,6 +343,8 @@ export default {
 
 <style lang="scss">
 #appt-new {
+  margin-top: 1.2rem;
+
   form {
     .date-div {
       fieldset {

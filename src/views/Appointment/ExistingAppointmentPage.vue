@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ion-content :fullscreen="true" v-if="getId && isLoaded">
+    <ion-content :fullscreen="true" v-if="isLoaded">
       <div id="appt-exist" class="container">
         <ion-button
           class="input-dirt"
@@ -170,13 +170,9 @@ export default {
   },
 
   mounted() {
-    if (!this.getId) {
-      window.location.href = "/appointment";
-    }
-
     axios
-      .post(process.env.VUE_APP_BACKEND + "/api/appointment/get", {
-        id: localStorage.getItem("id"),
+      .get(process.env.VUE_APP_BACKEND + "/api/appointment/get", {
+        params: { id: this.$route.params.id },
       })
 
       .then((res) => {
@@ -266,10 +262,6 @@ export default {
 
       return type;
     },
-
-    getId() {
-      return localStorage.getItem("id");
-    },
   },
 
   data() {
@@ -313,7 +305,7 @@ export default {
         convertOldDate.getDate();
 
       const data = {
-        id: localStorage.getItem("id"),
+        id: this.$route.params.id,
         carType: this.formDetails.carType,
         services: this.formDetails.services,
         date: this.formDetails.date,
@@ -327,7 +319,7 @@ export default {
         .post(process.env.VUE_APP_BACKEND + "/api/appointment/edit", data)
         .then(() => {
           console.log("success edit!");
-          window.location.href = this.checkUserType == 'customer' ? "/confirmation/editAppt" : "/employee";
+          window.location.href = this.checkUserType == 'customer' ? "/confirmation/editAppt" : "/appointment";
         })
         .catch((e) => {
           this.message =
@@ -339,7 +331,7 @@ export default {
 
     confirmDelete() {
       const data = {
-        id: localStorage.getItem("id"),
+        id: this.$route.params.id,
         carType: this.formDetails.carType,
         services: this.formDetails.services,
         date: this.formDetails.date,
@@ -353,7 +345,7 @@ export default {
         .post(process.env.VUE_APP_BACKEND + "/api/appointment/delete", data)
         .then(() => {
           console.log("success delete!");
-          window.location.href = this.checkUserType == 'customer' ? "/confirmation/deleteAppt" : '/employee';
+          window.location.href = this.checkUserType == 'customer' ? "/confirmation/deleteAppt" : '/appointment';
         })
         .catch((e) => {
           this.message =

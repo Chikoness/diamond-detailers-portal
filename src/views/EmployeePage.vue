@@ -4,8 +4,7 @@
       <div
         id="employee"
         class="container"
-        :class="isEmployer ? 'employer' : 'employee'"
-        v-if="isEmployerEmployee"
+        v-if="isEmployerEmployee && employees"
       >
         <div class="logo small"></div>
         <p class="title">Welcome back, {{ getName }}!</p>
@@ -15,26 +14,27 @@
             <ion-button href="/employee/new" color="dark"
               >Register New Employee</ion-button
             >
+            <ion-button @click="display = 'employees'" color="dark"
+              >Display Employees</ion-button
+            >
           </template>
-          <ion-button href="/appointment" color="dark"
-            >Check Appointment</ion-button
+          <ion-button @click="display = 'appointments'" color="dark"
+            >Display Appointments</ion-button
           >
 
-          <form @submit.prevent="submitICNumber" class="dark" v-if="isEmployer">
-            <div class="input-group">
-              <p>Enter your IC Number to view employer/employee page</p>
-              <ion-input
-                fill="outline"
-                pattern="\d{6}[\-]\d{2}[\-]\d{4}"
-                v-model="icNumber"
-                required
-              ></ion-input>
-            </div>
-            <div class="form-btn">
-              <ion-button type="submit" color="light">Submit</ion-button>
-            </div>
-            <p class="error">{{ message }}</p>
-          </form>
+          <display-employees
+            v-if="display == 'employees'"
+            :display="'employees'"
+            :data="employees"
+            @click="$event.target.id === 'display-emp' ? (display = false) : ''"
+          />
+
+          <display-employees 
+            v-if="display == 'appointments'"
+            :display="'appointments'"
+            :data="appts"
+            @click="$event.target.id === 'display-emp' ? (display = false) : ''"
+          />
         </div>
       </div>
     </ion-content>
@@ -42,21 +42,25 @@
 </template>
 
 <script>
-import { IonContent, IonPage, IonButton, IonInput } from "@ionic/vue";
+import { IonContent, IonPage, IonButton } from "@ionic/vue";
 import axios from "axios";
+import DisplayEmployees from '@/components/DisplayEmployees.vue';
 
 export default {
   components: {
     IonContent,
     IonPage,
     IonButton,
-    IonInput,
+    DisplayEmployees,
   },
 
   data() {
     return {
       icNumber: null,
       message: null,
+      employees: null,
+      appts: null,
+      display: null,
     };
   },
 
@@ -65,13 +69,29 @@ export default {
       window.location.href = "/authentication";
     }
 
-    if (localStorage.getItem("id") !== null) {
-      localStorage.removeItem("id");
-    }
+    axios
+      .get(process.env.VUE_APP_BACKEND + "/api/employees/all")
+      .then((res) => {
+        this.employees = res.data.data;
+      })
+      .catch((e) => {
+        this.message =
+          e.response === undefined
+            ? "Cannot connect to backend. Please wait and try again"
+            : e.response.data.message;
+      });
 
-    if (localStorage.getItem("icToCheck") !== null) {
-      localStorage.removeItem("icToCheck");
-    }
+      axios
+        .get(process.env.VUE_APP_BACKEND + "/api/appointment/all")
+        .then((res) => {
+          this.appts = res.data.data;
+        })
+        .catch((e) => {
+          this.message =
+            e.response === undefined
+              ? "Cannot connect to backend. Please wait and try again"
+              : e.response.data.message;
+        });
   },
 
   computed: {
@@ -117,8 +137,11 @@ export default {
   
 <style lang="scss">
 #employee {
+  height: 60%;
+
   .title {
     text-align: center;
+    margin-bottom: 1rem;
   }
 
   .list {
@@ -127,23 +150,12 @@ export default {
     margin: auto;
     width: 80%;
 
-    form {
-      margin-top: 1rem;
-      p {
-        margin-bottom: 1rem;
-      }
-    }
-
     ion-button {
       margin-bottom: 1.2rem;
       box-shadow: rgba(255, 255, 255, 0.4) 0px 5px,
         rgba(255, 255, 255, 0.3) 0px 10px, rgba(255, 255, 255, 0.2) 0px 15px,
         rgba(255, 255, 255, 0.1) 0px 20px, rgba(255, 255, 255, 0.05) 0px 25px;
     }
-  }
-
-  .error {
-    color: red;
   }
 }
 </style>

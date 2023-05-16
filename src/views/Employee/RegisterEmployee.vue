@@ -173,7 +173,8 @@ export default {
 };
 </script>
   
-  <style lang="scss">
+<style lang="scss">
 #emp-new {
+  margin-top: 1.2rem;
 }
 </style>

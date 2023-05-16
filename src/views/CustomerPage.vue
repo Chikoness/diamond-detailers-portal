@@ -43,6 +43,8 @@ export default {
   
 <style lang="scss">
 #customer {
+  height: 60%;
+  
   .title {
     text-align: center;
   }

@@ -33,8 +33,10 @@
           </form>
         </div>
 
-        <p class="title">Appointments</p>
-        <display-table-page v-if="checkUserType !== 'customer'" :data="appts" />
+        <template v-else>
+          <p class="title">Appointments</p>
+          <display-table-page :data="appts" />
+        </template>
       </div>
     </ion-content>
   </ion-page>
@@ -96,23 +98,23 @@ export default {
 
   methods: {
     submitApptId() {
-      const data = {
-        id: this.id,
-      };
+      window.location.href = "/appointment/edit/" + this.id;
+      // const data = {
+      //   id: this.id,
+      // };
 
-      axios
-        .post(process.env.VUE_APP_BACKEND + "/api/appointment/get", data)
-        .then((res) => {
-          localStorage.setItem("id", this.id);
+      // axios
+      //   .get(process.env.VUE_APP_BACKEND + "/api/appointment/get", data)
+      //   .then((res) => {
+      //     localStorage.setItem("id", this.id);
 
-          window.location.href = "/appointment/edit";
-        })
-        .catch((e) => {
-          this.message =
-            e.response === undefined
-              ? "Cannot connect to backend. Please wait and try again"
-              : e.response.data.message;
-        });
+      //   })
+      //   .catch((e) => {
+      //     this.message =
+      //       e.response === undefined
+      //         ? "Cannot connect to backend. Please wait and try again"
+      //         : e.response.data.message;
+      //   });
     },
   },
 };
@@ -120,13 +122,13 @@ export default {
 
 <style lang="scss">
 #customer-appt {
-  height: 90%;
+  height: 50%;
 
   .title {
     margin: auto;
     text-align: center;
     font-size: 1.2rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
   }
 
   .list {

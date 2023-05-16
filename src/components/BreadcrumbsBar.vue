@@ -3,24 +3,39 @@
     <ion-toolbar>
       <!-- <ion-title>Diamond Detailers Portal</ion-title> -->
       <ion-breadcrumbs>
-        <ion-breadcrumb 
-          :href="checkUserType == 'employer' || checkUserType == 'employee' ? '/employee' : checkUserType == 'customer' ? '/customer' : '/home'"
+        <ion-breadcrumb
+          :href="
+            checkUserType == 'employer' || checkUserType == 'employee'
+              ? '/employee'
+              : checkUserType == 'customer'
+              ? '/customer'
+              : '/home'
+          "
         >
           <p>Home</p>
-          <ion-icon slot="separator" :icon="arrowForward" :color="light"></ion-icon>
+          <ion-icon
+            slot="separator"
+            :icon="arrowForward"
+            :color="light"
+          ></ion-icon>
         </ion-breadcrumb>
 
-        <ion-breadcrumb
+        <!-- <ion-breadcrumb
           href="/appointment"
           v-if="
-            checkCurrentPage == 'Appointment' &&
-            (checkCurrentPath.includes('/new') ||
-            checkCurrentPath.includes('/edit'))
+            checkCurrentPath.includes('appointment') ||
+            (checkCurrentPath.includes('appointment') &&
+              checkCurrentPath.includes('new')) ||
+            checkCurrentPath.includes('edit')
           "
         >
           <p>Appointment</p>
-          <ion-icon slot="separator" :icon="arrowForward" :color="light"></ion-icon>
-        </ion-breadcrumb>
+          <ion-icon
+            slot="separator"
+            :icon="arrowForward"
+            :color="light"
+          ></ion-icon>
+        </ion-breadcrumb> -->
 
         <ion-breadcrumb v-if="checkCurrentPage == 'New Appointment'">
           <p>New Appointment</p>
@@ -37,7 +52,6 @@
         <ion-breadcrumb v-if="checkCurrentPage == 'Change Employee Details'">
           <p>Change Employee Details</p>
         </ion-breadcrumb>
-
       </ion-breadcrumbs>
     </ion-toolbar>
   </ion-header>
@@ -51,7 +65,7 @@ import {
   IonBreadcrumb,
   IonIcon,
 } from "@ionic/vue";
-import { arrowForward } from "ionicons/icons"
+import { arrowForward } from "ionicons/icons";
 
 export default {
   components: {
@@ -59,24 +73,24 @@ export default {
     IonToolbar,
     IonBreadcrumbs,
     IonBreadcrumb,
-    IonIcon
+    IonIcon,
   },
 
   data() {
     return {
-      arrowForward
+      arrowForward,
     };
   },
 
   mounted() {
-    // console.log(this.$router.currentRoute._value.name);
+    // console.log(this.$router.currentRoute._value.path);
   },
 
   computed: {
     checkUserType() {
-      const type = localStorage.getItem("type")
+      const type = localStorage.getItem("type");
 
-      return type
+      return type;
     },
 
     checkCurrentPage() {

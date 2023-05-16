@@ -31,7 +31,7 @@ const routes = [
     component: RegisterEmployee
   },
   {
-    path: '/employee/edit',
+    path: '/employee/edit/:id',
     name: 'Change Employee Details',
     component: EditEmployee
   },
@@ -56,7 +56,7 @@ const routes = [
     component: NewAppointmentPage
   },
   {
-    path: '/appointment/edit',
+    path: '/appointment/edit/:id',
     name: 'Edit Appointment',
     component: ExistingAppointmentPage
   },
