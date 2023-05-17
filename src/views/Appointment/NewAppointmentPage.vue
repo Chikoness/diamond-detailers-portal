@@ -250,7 +250,8 @@ export default {
         .then((res) => {
           localStorage.setItem("name", this.name);
           localStorage.setItem("id", res.data.id);
-          window.location.href = "/confirmation/makeAppt";
+          
+          window.location.href = "/confirmation/makeAppt/";
         })
         .catch((e) => {
           this.message =

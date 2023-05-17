@@ -6,9 +6,11 @@
           <p class="explain">{{ confirmMessageType }}</p>
           <br />
           <p v-if="getPageType == 'makeAppt' || getPageType == 'editAppt'">
-            {{ getPageType == 'editAppt' ? 'New' : '' }} Price : RM {{ price.toFixed(2) }}
+            {{ getPageType == "editAppt" ? "New" : "" }} Price : RM
+            {{ price.toFixed(2) }}
             <br />
-            {{ getPageType == 'editAppt' ? 'New' : '' }} Estimated Time: {{ numOfServices }} hour{{ numOfServices > 1 ? 's' : '' }}
+            {{ getPageType == "editAppt" ? "New" : "" }} Estimated Time:
+            {{ numOfServices }} hour{{ numOfServices > 1 ? "s" : "" }}
             <br /><br />
             Please bank in to either one of the following bank accounts:
             <br /><br />
@@ -16,11 +18,12 @@
             Name: Diamond Detailers Plt<br />
             Account Number: 123456789<br />
             <br />
-            Maybank<br/>
+            Maybank<br />
             Name: Diamond Detailers Plt<br />
             Account Number: 123456789<br />
             <br />
-            Once the payment has been made, a confirmation will be sent to you shortly. Please wait within 1 - 3 hours.
+            Once the payment has been made, a confirmation will be sent to you
+            shortly. Please wait within 1 - 3 hours.
             <br /><br />
             Thank you for choosing Diamond Detailers!
           </p>
@@ -34,7 +37,7 @@
           :href="checkUserType == 'customer' ? '/customer' : '/employee'"
           @click="registerCustomer"
         >
-            &lt; Back to Home
+          &lt; Back to Home
         </ion-button>
       </div>
     </ion-content>
@@ -43,7 +46,7 @@
 
 <script>
 import { IonContent, IonPage, IonButton } from "@ionic/vue";
-import axios from 'axios'
+import axios from "axios";
 
 export default {
   props: ["status"],
@@ -56,24 +59,27 @@ export default {
 
   data() {
     return {
-        formDetails: null,
-        price: 0,
-        numOfServices: null
-    }
+      formDetails: null,
+      price: 0,
+      numOfServices: null,
+    };
   },
 
   mounted() {
-    if (this.getPageType !== 'deleteAppt') {
+    console.log(localStorage.getItem("id"))
+    if (this.getPageType !== "deleteAppt") {
       axios
-        .post(process.env.VUE_APP_BACKEND + "/api/appointment/get", {
-          id: localStorage.getItem("id"),
+        .get(process.env.VUE_APP_BACKEND + "/api/appointment/get", {
+          params: {
+            id: localStorage.getItem("id"),
+          },
         })
         .then((res) => {
           this.formDetails = res.data.data;
 
-          this.getFullPrice()
+          this.getFullPrice();
 
-          this.numOfServices = this.formDetails.services.length
+          this.numOfServices = this.formDetails.services.length;
         })
         .catch(() => {
           window.location.href = "/appointment";
@@ -87,7 +93,7 @@ export default {
 
   computed: {
     getPageType() {
-      return this.$route.params.id
+      return this.$route.params.id;
     },
 
     checkUserType() {
@@ -131,7 +137,7 @@ export default {
               : e.response.data.message;
         });
     },
-  }
+  },
 };
 </script>
 

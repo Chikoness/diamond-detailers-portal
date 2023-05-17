@@ -27,7 +27,7 @@
                 >Submit</ion-button
               >
             </div>
-            <p class="error">
+            <p class="error" v-if="message">
               {{ message }}
             </p>
           </form>
@@ -99,22 +99,6 @@ export default {
   methods: {
     submitApptId() {
       window.location.href = "/appointment/edit/" + this.id;
-      // const data = {
-      //   id: this.id,
-      // };
-
-      // axios
-      //   .get(process.env.VUE_APP_BACKEND + "/api/appointment/get", data)
-      //   .then((res) => {
-      //     localStorage.setItem("id", this.id);
-
-      //   })
-      //   .catch((e) => {
-      //     this.message =
-      //       e.response === undefined
-      //         ? "Cannot connect to backend. Please wait and try again"
-      //         : e.response.data.message;
-      //   });
     },
   },
 };
@@ -132,11 +116,15 @@ export default {
   }
 
   .list {
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: auto;
-    overflow-y: auto;
+
+    form {
+      height: 50%;
+    }
 
     .appt-btn {
       margin-bottom: 5rem;

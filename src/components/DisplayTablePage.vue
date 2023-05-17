@@ -1,7 +1,7 @@
 <template>
   <div class="tbl-view" :class="{ popup: popupSize }" v-if="data">
     <div class="row" v-if="data.length == 0">
-      No data available to display
+      <p>No data available to display</p>
     </div>
 
     <template v-for="d in data" :key="d">
@@ -63,6 +63,13 @@ export default {
     &.finished {
       background: #fff;
       color: #000;
+    }
+
+    p {
+      text-align: center;
+      width: 100%;
+      padding: 1rem 0;
+      border: 1px solid #000;
     }
 
     .row-info {

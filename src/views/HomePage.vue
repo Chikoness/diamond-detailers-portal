@@ -229,6 +229,8 @@ form {
 // <-- Global css theme end --> 
 
 #main {
+  margin-top: 0;
+
   h2 {
     font: 1.7rem 'Gotham-Black';
     margin-top: 0.3rem;

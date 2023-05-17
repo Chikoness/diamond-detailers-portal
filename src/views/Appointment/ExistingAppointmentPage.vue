@@ -97,6 +97,24 @@
                 >{{ slotValues(name) }}</ion-select-option
               >
             </ion-select>
+
+            <ion-select
+              v-if="checkUserType !== 'customer'"
+              label="Employee in Charge"
+              interface="popover"
+              fill="outline"
+              label-placement="stacked"
+              @ionChange="formDetails.icNumber = $event.target.value"
+            >
+              <ion-select-option
+                v-for="emp in allEmployees"
+                :key="emp.icNumber"
+                :value="emp.icNumber"
+              >
+                {{ emp.name }}
+              </ion-select-option>
+            </ion-select>
+
             <ion-select
               label="Status"
               interface="popover"
@@ -205,6 +223,18 @@ export default {
               .then((res) => {
                 this.availableServices = res.data.data;
 
+                axios
+                  .get(process.env.VUE_APP_BACKEND + "/api/employees/all")
+                  .then((res) => {
+                    this.allEmployees = res.data.data;
+                  })
+                  .catch((e) => {
+                    this.message =
+                      e.response === undefined
+                        ? "Cannot connect to backend. Please wait and try again"
+                        : e.response.data.message;
+                  });
+
                 this.isLoaded = true;
               })
               .catch((e) => {
@@ -234,9 +264,7 @@ export default {
           ? "0" + (d.getMonth() + 1)
           : d.getMonth() + 1) +
         "/" +
-        ((d.getDate()).toString().length == 1
-          ? "0" + (d.getDate())
-          : d.getDate()) +
+        (d.getDate().toString().length == 1 ? "0" + d.getDate() : d.getDate()) +
         "/" +
         d.getFullYear();
       return dToString;
@@ -277,6 +305,7 @@ export default {
       oldDate: null,
       timeSlot2: null,
       message: null,
+      allEmployees: null,
     };
   },
 
@@ -291,8 +320,8 @@ export default {
           ? "0" + (convertDate.getMonth() + 1)
           : convertDate.getMonth() + 1) +
         "/" +
-        ((convertDate.getDate()).toString().length == 1
-          ? "0" + (convertDate.getDate())
+        (convertDate.getDate().toString().length == 1
+          ? "0" + convertDate.getDate()
           : convertDate.getDate());
 
       this.oldDate =
@@ -313,13 +342,18 @@ export default {
         timeSlot: this.formDetails.timeSlot,
         oldTimeSlot: this.timeSlot2,
         status: this.formDetails.status,
+        icNumber: this.checkUserType == 'customer' ? "" : this.formDetails.icNumber
       };
 
       axios
         .post(process.env.VUE_APP_BACKEND + "/api/appointment/edit", data)
         .then(() => {
-          console.log("success edit!");
-          window.location.href = this.checkUserType == 'customer' ? "/confirmation/editAppt" : "/appointment";
+          localStorage.setItem("id", this.$route.params.id);
+          
+          window.location.href =
+            this.checkUserType == "customer"
+              ? "/confirmation/editAppt"
+              : "/appointment";
         })
         .catch((e) => {
           this.message =
@@ -344,8 +378,11 @@ export default {
       axios
         .post(process.env.VUE_APP_BACKEND + "/api/appointment/delete", data)
         .then(() => {
-          console.log("success delete!");
-          window.location.href = this.checkUserType == 'customer' ? "/confirmation/deleteAppt" : '/appointment';
+          localStorage.setItem("id", this.$route.params.id)
+          window.location.href =
+            this.checkUserType == "customer"
+              ? "/confirmation/deleteAppt"
+              : "/appointment";
         })
         .catch((e) => {
           this.message =
@@ -429,7 +466,7 @@ export default {
         margin: -0.5rem 0 0.5rem 0;
 
         &.employee {
-          background: rgba(255, 255, 255, 1)
+          background: rgba(255, 255, 255, 1);
         }
       }
 
