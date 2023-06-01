@@ -27,7 +27,7 @@ export default {
   padding-top: 55%;
 
   .emp-container {
-    width: 80%;
+    width: 90%;
     height: auto;
     background-color: #fff;
     margin: auto;

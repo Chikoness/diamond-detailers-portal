@@ -99,7 +99,7 @@ div {
 .container {
   text-align: center;
   width: 100%;
-  padding: 0 2rem;
+  padding: 0 0.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -120,7 +120,7 @@ ion-content {
 }
 
 ion-button {
-  font: 1.1rem "Gotham-Book";
+  font: 1rem "Gotham-Book";
 }
 
 .logo {

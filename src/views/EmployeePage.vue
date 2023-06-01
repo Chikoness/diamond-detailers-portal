@@ -69,6 +69,10 @@ export default {
       window.location.href = "/authentication";
     }
 
+    if (localStorage.getItem("id") !== null) {
+      localStorage.removeItem("id");
+    }
+
     axios
       .get(process.env.VUE_APP_BACKEND + "/api/employees/all")
       .then((res) => {

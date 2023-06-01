@@ -105,6 +105,7 @@
               fill="outline"
               label-placement="stacked"
               @ionChange="formDetails.icNumber = $event.target.value"
+              v-model="formDetails.icNumber"
             >
               <ion-select-option
                 v-for="emp in allEmployees"
@@ -353,7 +354,7 @@ export default {
           window.location.href =
             this.checkUserType == "customer"
               ? "/confirmation/editAppt"
-              : "/appointment";
+              : "/employee";
         })
         .catch((e) => {
           this.message =
