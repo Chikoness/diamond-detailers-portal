@@ -18,27 +18,6 @@
           ></ion-icon>
         </ion-breadcrumb>
 
-        <!-- <ion-breadcrumb
-          href="/appointment"
-          v-if="
-            checkCurrentPath.includes('appointment') ||
-            (checkCurrentPath.includes('appointment') &&
-              checkCurrentPath.includes('new')) ||
-            checkCurrentPath.includes('edit')
-          "
-        >
-          <p>Appointment</p>
-          <ion-icon
-            slot="separator"
-            :icon="arrowForward"
-            :color="light"
-          ></ion-icon>
-        </ion-breadcrumb> -->
-
-        <ion-breadcrumb v-if="checkCurrentPage == 'New Appointment'">
-          <p>New Appointment</p>
-        </ion-breadcrumb>
-
         <ion-breadcrumb v-if="checkCurrentPage == 'Edit Appointment'">
           <p>Edit Appointment</p>
         </ion-breadcrumb>
