@@ -43,17 +43,7 @@ export default {
     };
   },
 
-  computed: {
-    checkUserType() {
-      const type = localStorage.getItem("type");
-
-      if (type == null) {
-        return "customer";
-      }
-
-      return type;
-    },
-  },
+  computed: {},
 
   methods: {
     submitICNumber() {

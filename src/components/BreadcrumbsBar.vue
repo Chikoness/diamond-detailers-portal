@@ -7,8 +7,6 @@
           :href="
             checkUserType == 'employer' || checkUserType == 'employee'
               ? '/employee'
-              : checkUserType == 'customer'
-              ? '/customer'
               : '/home'
           "
         >

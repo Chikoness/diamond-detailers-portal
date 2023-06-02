@@ -144,6 +144,7 @@ export default {
 <style lang="scss">
 #employee {
   height: 60%;
+  padding: 0 0.5rem;
 
   .title {
     text-align: center;

@@ -3,7 +3,7 @@
     <div class="car-form-container" :class="`page-${page}`">
       <form
         @submit.prevent="submitDirtLvl"
-        :class="{ dark: checkUserType !== 'customer' }"
+        class="dark"
       >
         <div class="input-group" v-if="page == 1">
           <ion-select

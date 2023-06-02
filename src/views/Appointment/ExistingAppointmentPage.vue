@@ -5,13 +5,12 @@
         <ion-button
           class="input-dirt"
           color="dark"
-          v-if="checkUserType !== 'customer'"
           @click="inputDirtOpen = true"
           >Input Dirt Level</ion-button
         >
         <form
           @submit.prevent="editForm"
-          :class="{ dark: checkUserType !== 'customer' }"
+          class="dark"
         >
           <div class="input-group">
             <ion-input
@@ -67,7 +66,7 @@
               </ion-select-option>
             </ion-select>
             <div class="date-div">
-              <fieldset :class="checkUserType == 'customer' ? '' : 'employee'">
+              <fieldset class="employee">
                 <legend>Date</legend>
                 <input
                   :placeholder="dateToString"
@@ -100,7 +99,6 @@
             </ion-select>
 
             <ion-select
-              v-if="checkUserType !== 'customer'"
               label="Employee in Charge"
               interface="popover"
               fill="outline"
@@ -124,7 +122,6 @@
               label-placement="stacked"
               required
               @ionChange="formDetails.status = $event.target.value"
-              :disabled="checkUserType == 'customer'"
               v-model="formDetails.status"
             >
               <ion-select-option value="Pending">Pending</ion-select-option>
@@ -143,7 +140,7 @@
             <ion-button
               v-else
               type="submit"
-              :color="checkUserType == 'customer' ? 'warning' : 'light'"
+              color="light"
               >Edit</ion-button
             >
             <ion-button color="danger" @click="deletePopUp = true"
@@ -156,7 +153,7 @@
 
       <popup-box
         v-if="deletePopUp"
-        :isEmployee="checkUserType !== 'customer'"
+        :isEmployee="true"
         message="Are you sure you would to delete your appointment?"
         :displayButtons="true"
         @close="deletePopUp = false"
@@ -359,7 +356,7 @@ export default {
         timeSlot: this.formDetails.timeSlot,
         oldTimeSlot: this.timeSlot2,
         status: this.formDetails.status,
-        icNumber: this.checkUserType == 'customer' ? "" : this.formDetails.icNumber
+        icNumber: this.formDetails.icNumber
       };
 
       axios
@@ -396,10 +393,7 @@ export default {
         .post(process.env.VUE_APP_BACKEND + "/api/appointment/delete", data)
         .then(() => {
           localStorage.setItem("id", this.id)
-          window.location.href =
-            this.checkUserType == "customer"
-              ? "/confirmation/deleteAppt"
-              : "/appointment";
+          window.location.href = "/appointment";
         })
         .catch((e) => {
           this.message =

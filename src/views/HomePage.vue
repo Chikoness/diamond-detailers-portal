@@ -10,28 +10,21 @@
 
       <div id="main" class="container">
         <div class="logo"></div>
-        <span>Welcome to</span>
+        <span>Welcome to Employee's</span>
         <h2>Diamond Detailers Portal</h2>
-        <h4>Are you employer/employee or customer?</h4>
         <br />
-        <ion-button color="warning" :href="isEmployerEmployee ? '/employee' : '/authentication'"
-          >Employer / Employee</ion-button
+        <ion-button
+          color="warning"
+          :href="isEmployerEmployee ? '/employee' : '/authentication'"
+          >Login</ion-button
         >
-        <br />
-        <ion-button color="warning" href="/customer" @click="registerCustomer">Customer</ion-button>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script>
-import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonToolbar,
-  IonButton,
-} from "@ionic/vue";
+import { IonContent, IonHeader, IonPage, IonToolbar, IonButton } from "@ionic/vue";
 
 export default {
   components: {
@@ -43,10 +36,8 @@ export default {
   },
 
   mounted() {
-    if (this.isEmployerEmployee) { 
-      window.location.href = "/employee"
-    } else if (this.checkUserType == 'customer') {
-      window.location.href = "/customer"
+    if (this.isEmployerEmployee) {
+      window.location.href = "/employee";
     }
   },
 
@@ -57,43 +48,37 @@ export default {
         localStorage.getItem("type") == "employee"
       );
     },
-
-    checkUserType() {
-      const type = localStorage.getItem("type")
-
-      return type
-    },
   },
 
   methods: {
     registerCustomer() {
       if (localStorage.getItem("type") == null) {
-        localStorage.setItem("type", "customer")
-      } 
-    }
-  }
+        localStorage.setItem("type", "customer");
+      }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
-// <-- Global css theme --> 
+// <-- Global css theme -->
 @font-face {
-  font-family: 'Gotham-Black';
-  src: url('@/assets/fonts/Gotham-Black.otf');
+  font-family: "Gotham-Black";
+  src: url("@/assets/fonts/Gotham-Black.otf");
 }
 
 @font-face {
-  font-family: 'Gotham-Book';
-  src: url('@/assets/fonts/Gotham-Book.otf');
+  font-family: "Gotham-Book";
+  src: url("@/assets/fonts/Gotham-Book.otf");
 }
 
 @font-face {
-  font-family: 'Gotham-Light';
-  src: url('@/assets/fonts/Gotham-Light-Regular.otf');
+  font-family: "Gotham-Light";
+  src: url("@/assets/fonts/Gotham-Light-Regular.otf");
 }
 
 div {
-  font: 1.2rem 'Gotham-Book';
+  font: 1.2rem "Gotham-Book";
 }
 
 .container {
@@ -105,7 +90,7 @@ div {
   justify-content: center;
   margin-top: 10rem;
   height: 100%;
-  
+
   &.employer {
     margin-top: 5rem;
     height: 80%;
@@ -114,7 +99,7 @@ div {
 
 ion-content {
   --background: none;
-  background: no-repeat center url('@/assets/img/background2.png');
+  background: no-repeat center url("@/assets/img/background2.png");
   background-size: auto 100%;
   background-color: #000;
 }
@@ -125,7 +110,7 @@ ion-button {
 
 .logo {
   margin: 0 auto;
-  background: no-repeat url('@/assets/img/diamonddetailers.png');
+  background: no-repeat url("@/assets/img/diamonddetailers.png");
   background-size: 100%;
   width: 45vw;
   height: 45vw;
@@ -146,15 +131,16 @@ form {
   background-color: rgba(255, 213, 52, 0.9);
   padding: 1.5rem 1.5rem;
   border-radius: 0.5rem;
-  box-shadow: rgba(255, 213, 52, 0.4) 0px 5px,
-    rgba(255, 213, 52, 0.3) 0px 10px, rgba(255, 213, 52, 0.2) 0px 15px,
-    rgba(255, 213, 52, 0.1) 0px 20px, rgba(255, 213, 52, 0.05) 0px 25px;
+  box-shadow: rgba(255, 213, 52, 0.4) 0px 5px, rgba(255, 213, 52, 0.3) 0px 10px,
+    rgba(255, 213, 52, 0.2) 0px 15px, rgba(255, 213, 52, 0.1) 0px 20px,
+    rgba(255, 213, 52, 0.05) 0px 25px;
 
   .input-group {
-    ion-input, ion-select {
+    ion-input,
+    ion-select {
       --highlight-color-focused: #000;
       --background: rgba(255, 255, 255, 0.5);
-      --color: #000 ;
+      --color: #000;
       color: #000;
       margin-bottom: 0.5rem;
 
@@ -165,23 +151,24 @@ form {
     }
 
     /* margin-bottom: 2rem; */
-
   }
-  
+
   &.dark {
     background-color: rgba(255, 255, 255, 0.8);
     padding: 1.5rem 1.5rem;
     border-radius: 0.5rem;
-    box-shadow: rgba(255, 255, 255, 0.4) 0px 5px,
-      rgba(255, 255, 255, 0.3) 0px 10px, rgba(255, 255, 255, 0.2) 0px 15px,
-      rgba(255, 255, 255, 0.1) 0px 20px, rgba(255, 255, 255, 0.05) 0px 25px;
-    
+    box-shadow: rgba(255, 255, 255, 0.4) 0px 5px, rgba(255, 255, 255, 0.3) 0px 10px,
+      rgba(255, 255, 255, 0.2) 0px 15px, rgba(255, 255, 255, 0.1) 0px 20px,
+      rgba(255, 255, 255, 0.05) 0px 25px;
+
     p {
       color: #000;
     }
-    
+
     .input-group {
-      ion-input, ion-select, ion-textarea {
+      ion-input,
+      ion-select,
+      ion-textarea {
         --highlight-color-focused: #000;
         --background: rgba(255, 255, 255, 1);
         --color: #000;
@@ -226,13 +213,13 @@ form {
   }
 }
 
-// <-- Global css theme end --> 
+// <-- Global css theme end -->
 
 #main {
   margin-top: 0;
 
   h2 {
-    font: 1.7rem 'Gotham-Black';
+    font: 1.7rem "Gotham-Black";
     margin-top: 0.3rem;
     margin-bottom: 5rem;
   }

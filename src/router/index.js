@@ -1,9 +1,6 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import HomePage from '../views/HomePage'
 import EmployeePage from '../views/EmployeePage'
-import CustomerPage from '../views/CustomerPage'
-import AppointmentPage from '../views/AppointmentPage'
-import NewAppointmentPage from '../views/Appointment/NewAppointmentPage'
 import ExistingAppointmentPage from '../views/Appointment/ExistingAppointmentPage'
 import AuthenticationPage from '../views/AuthenticationPage'
 import ConfirmationPage from '../views/ConfirmationPage'
@@ -39,21 +36,6 @@ const routes = [
     path: '/authentication',
     name: 'Authenticate',
     component: AuthenticationPage
-  },
-  {
-    path: '/customer',
-    name: 'Customer',
-    component: CustomerPage
-  },
-  {
-    path: '/appointment',
-    name: 'Appointment',
-    component: AppointmentPage
-  },
-  {
-    path: '/appointment/new',
-    name: 'New Appointment',
-    component: NewAppointmentPage
   },
   {
     path: '/appointment/edit/:id',
