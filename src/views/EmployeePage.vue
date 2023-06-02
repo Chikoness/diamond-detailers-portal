@@ -73,6 +73,8 @@ export default {
       localStorage.removeItem("id");
     }
 
+    this.$store.state.dirtData = {}
+
     axios
       .get(process.env.VUE_APP_BACKEND + "/api/employees/all")
       .then((res) => {

@@ -99,7 +99,7 @@ div {
 .container {
   text-align: center;
   width: 100%;
-  padding: 0 0.5rem;
+  padding: 0 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;

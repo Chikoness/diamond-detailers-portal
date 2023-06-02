@@ -6,6 +6,7 @@
           class="input-dirt"
           color="dark"
           v-if="checkUserType !== 'customer'"
+          @click="inputDirtOpen = true"
           >Input Dirt Level</ion-button
         >
         <form
@@ -148,8 +149,8 @@
             <ion-button color="danger" @click="deletePopUp = true"
               >Delete</ion-button
             >
-            <p class="error">{{ message }}</p>
           </div>
+          <p class="error">{{ message }}</p>
         </form>
       </div>
 
@@ -161,6 +162,14 @@
         @close="deletePopUp = false"
         @click="$event.target.id === 'popup' ? (deletePopUp = false) : ''"
         @confirm="confirmDelete"
+      />
+      
+      <input-dirt 
+        v-if="inputDirtOpen"
+        :id="id"
+        :dirtInfo="formDetails.dirtInfo"
+        @closeDirtForm="closeDirtForm()"
+        @click="$event.target.id === 'car-form' ? (inputDirtOpen = false) : ''"
       />
     </ion-content>
   </ion-page>
@@ -177,6 +186,7 @@ import {
 import PopupBox from "@/components/PopupBox.vue";
 import { cars } from "@/data/cars";
 import axios from "axios";
+import InputDirt from "@/components/InputDirt.vue";
 
 export default {
   components: {
@@ -186,12 +196,13 @@ export default {
     IonSelect,
     IonSelectOption,
     PopupBox,
+    InputDirt
   },
 
   mounted() {
     axios
       .get(process.env.VUE_APP_BACKEND + "/api/appointment/get", {
-        params: { id: this.$route.params.id },
+        params: { id: this.id },
       })
 
       .then((res) => {
@@ -253,7 +264,7 @@ export default {
           });
       })
       .catch(() => {
-        window.location.href = "/appointment";
+        window.location.href = "/employee";
       });
   },
 
@@ -269,6 +280,10 @@ export default {
         "/" +
         d.getFullYear();
       return dToString;
+    },
+
+    id() {
+      return this.$route.params.id
     },
 
     checkIfDateHasChanged() {
@@ -300,6 +315,7 @@ export default {
       formDetails: {},
       editModeOn: false,
       deletePopUp: false,
+      inputDirtOpen: false,
       availableTimeSlotList: null,
       availableServices: null,
       date2: null,
@@ -335,7 +351,7 @@ export default {
         convertOldDate.getDate();
 
       const data = {
-        id: this.$route.params.id,
+        id: this.id,
         carType: this.formDetails.carType,
         services: this.formDetails.services,
         date: this.formDetails.date,
@@ -349,7 +365,7 @@ export default {
       axios
         .post(process.env.VUE_APP_BACKEND + "/api/appointment/edit", data)
         .then(() => {
-          localStorage.setItem("id", this.$route.params.id);
+          localStorage.setItem("id", this.id);
           
           window.location.href =
             this.checkUserType == "customer"
@@ -366,7 +382,7 @@ export default {
 
     confirmDelete() {
       const data = {
-        id: this.$route.params.id,
+        id: this.id,
         carType: this.formDetails.carType,
         services: this.formDetails.services,
         date: this.formDetails.date,
@@ -379,7 +395,7 @@ export default {
       axios
         .post(process.env.VUE_APP_BACKEND + "/api/appointment/delete", data)
         .then(() => {
-          localStorage.setItem("id", this.$route.params.id)
+          localStorage.setItem("id", this.id)
           window.location.href =
             this.checkUserType == "customer"
               ? "/confirmation/deleteAppt"
@@ -440,6 +456,11 @@ export default {
               : e.response.data.message;
         });
     },
+
+    closeDirtForm() {
+      this.inputDirtOpen = false
+      this.message = "Successful dirt input"
+    }
   },
 };
 </script>
