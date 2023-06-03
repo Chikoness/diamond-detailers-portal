@@ -127,6 +127,7 @@
               <ion-select-option value="Pending">Pending</ion-select-option>
               <ion-select-option value="Paid">Paid</ion-select-option>
               <ion-select-option value="Finished">Finished</ion-select-option>
+              <ion-select-option value="Cancelled">Cancelled</ion-select-option>
             </ion-select>
           </div>
 
@@ -356,7 +357,8 @@ export default {
         timeSlot: this.formDetails.timeSlot,
         oldTimeSlot: this.timeSlot2,
         status: this.formDetails.status,
-        icNumber: this.formDetails.icNumber
+        icNumber: this.formDetails.icNumber,
+        email: this.formDetails.email
       };
 
       axios
@@ -387,13 +389,14 @@ export default {
         timeSlot: this.formDetails.timeSlot,
         oldTimeSlot: this.timeSlot2,
         status: this.formDetails.status,
+        email: this.formDetails.email
       };
 
       axios
         .post(process.env.VUE_APP_BACKEND + "/api/appointment/delete", data)
         .then(() => {
           localStorage.setItem("id", this.id)
-          window.location.href = "/appointment";
+          window.location.href = "/employee";
         })
         .catch((e) => {
           this.message =
