@@ -384,9 +384,7 @@ export default {
   },
 
   mounted() {
-    if (Object.keys(this.dirtInfo).length > 0) {
-        this.$store.state.dirtData = this.dirtInfo
-    } 
+    this.$store.state.dirtData = this.dirtInfo
   },
 
   methods: {
