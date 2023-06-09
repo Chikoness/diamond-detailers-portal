@@ -3,7 +3,6 @@ import HomePage from '../views/HomePage'
 import EmployeePage from '../views/EmployeePage'
 import ExistingAppointmentPage from '../views/Appointment/ExistingAppointmentPage'
 import AuthenticationPage from '../views/AuthenticationPage'
-import ConfirmationPage from '../views/ConfirmationPage'
 import RegisterEmployee from '../views/Employee/RegisterEmployee'
 import EditEmployee from '../views/Employee/EditEmployee'
 
@@ -41,11 +40,6 @@ const routes = [
     path: '/appointment/edit/:id',
     name: 'Edit Appointment',
     component: ExistingAppointmentPage
-  },
-  {
-    path: '/confirmation/:id',
-    name: 'Confirmation',
-    component: ConfirmationPage
   }
 ]
 
