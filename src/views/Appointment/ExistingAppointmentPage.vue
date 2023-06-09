@@ -297,11 +297,7 @@ export default {
 
     checkUserType() {
       const type = localStorage.getItem("type");
-
-      if (type == null) {
-        return "customer";
-      }
-
+      
       return type;
     },
   },
@@ -366,10 +362,7 @@ export default {
         .then(() => {
           localStorage.setItem("id", this.id);
           
-          window.location.href =
-            this.checkUserType == "customer"
-              ? "/confirmation/editAppt"
-              : "/employee";
+          window.location.href = "/employee";
         })
         .catch((e) => {
           this.message =

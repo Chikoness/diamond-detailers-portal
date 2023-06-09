@@ -4,7 +4,7 @@
       <div id="emp-edit" class="container" v-if="isLoaded">
         <form
           @submit.prevent="submitForm"
-          :class="{ dark: checkUserType !== 'customer' }"
+          class="dark"
         >
           <div class="input-group">
             <ion-input
@@ -82,7 +82,7 @@
 
       <popup-box
         v-if="openPopUp"
-        :isEmployee="checkUserType !== 'customer'"
+        :isEmployee="true"
         :message="'Are you sure you want to delete ' + formDetails.name + '?'"
         :displayButtons="true"
         @close="openPopUp = false"
@@ -127,10 +127,6 @@ export default {
   computed: {
     checkUserType() {
       const type = localStorage.getItem("type");
-
-      if (type == null) {
-        return "customer";
-      }
 
       return type;
     },

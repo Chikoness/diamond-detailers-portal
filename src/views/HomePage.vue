@@ -50,13 +50,7 @@ export default {
     },
   },
 
-  methods: {
-    registerCustomer() {
-      if (localStorage.getItem("type") == null) {
-        localStorage.setItem("type", "customer");
-      }
-    },
-  },
+  methods: {},
 };
 </script>
 
