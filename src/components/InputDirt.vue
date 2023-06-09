@@ -384,7 +384,10 @@ export default {
   },
 
   mounted() {
-    this.$store.state.dirtData = this.dirtInfo
+    console.log(this.dirtInfo == undefined)
+    if (this.dirtInfo != undefined) {
+      this.$store.state.dirtData = this.dirtInfo
+    }
   },
 
   methods: {
