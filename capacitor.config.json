@@ -1,0 +1,6 @@
+{
+  "appId": "com.ddp.app",
+  "appName": "diamond-detailers-portal",
+  "webDir": "public",
+  "bundledWebRuntime": false
+}
