@@ -1,5 +1,7 @@
 {
   "name": "Diamond Detailers Portal",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "vue"
 }
