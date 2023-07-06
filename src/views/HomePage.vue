@@ -106,13 +106,13 @@ ion-button {
   margin: 0 auto;
   background: no-repeat url("@/assets/img/diamonddetailers.png");
   background-size: 100%;
-  width: 45vw;
-  height: 45vw;
+  width: 15rem;
+  height: 15rem;
   margin-bottom: 0.5rem;
 
   &.small {
-    width: 28vw;
-    height: 28vw;
+    width: 12rem;
+    height: 12rem;
     margin-bottom: 1rem;
   }
 }
@@ -220,6 +220,11 @@ form {
 
   h4 {
     margin-bottom: 1.5rem;
+  }
+
+  ion-button {
+    margin: 0 auto;
+    width: 18rem;
   }
 }
 </style>
