@@ -140,11 +140,15 @@
             >
             <ion-button
               v-else
+              :disabled="isEditClicked"
               type="submit"
               color="light"
               >Edit</ion-button
             >
-            <ion-button color="danger" @click="deletePopUp = true"
+            <ion-button
+              :disabled="isEditClicked || isDeleteClicked" 
+              color="danger" 
+              @click="deletePopUp = true"
               >Delete</ion-button
             >
           </div>
@@ -162,7 +166,7 @@
         @confirm="confirmDelete"
       />
       
-      <input-dirt 
+      <input-dirt
         v-if="inputDirtOpen"
         :id="id"
         :dirtInfo="formDetails.dirtInfo"
@@ -317,11 +321,15 @@ export default {
       timeSlot2: null,
       message: null,
       allEmployees: null,
+      isEditClicked: false,
+      isDeleteClicked: false,
     };
   },
 
   methods: {
     editForm() {
+      this.isEditClicked = true
+      
       const convertDate = new Date(this.formDetails.date);
       const convertOldDate = new Date(this.oldDate);
       this.formDetails.date =
@@ -369,10 +377,14 @@ export default {
             e.response === undefined
               ? "Cannot connect to backend. Please wait and try again"
               : e.response.data.message;
+            
+          this.isEditClicked = false
         });
     },
 
     confirmDelete() {
+      this.isDeleteClicked = true
+
       const data = {
         id: this.id,
         carType: this.formDetails.carType,
@@ -392,6 +404,7 @@ export default {
           window.location.href = "/employee";
         })
         .catch((e) => {
+          this.isDeleteClicked = false
           this.message =
             e.response === undefined
               ? "Cannot connect to backend. Please wait and try again"
