@@ -19,12 +19,12 @@ export default {
 #display-emp {
   position: absolute;
   top: 0;
-  width: 80%;
+  left: 0;
+  width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.8);
   z-index: 2;
-  display: flex;
-  // margin: auto;
+  padding-top: 55%;
 
   .emp-container {
     width: 90%;
@@ -37,12 +37,6 @@ export default {
     box-shadow: rgba(255, 255, 255, 0.4) 0px 5px,
       rgba(255, 255, 255, 0.3) 0px 10px, rgba(255, 255, 255, 0.2) 0px 15px,
       rgba(255, 255, 255, 0.1) 0px 20px, rgba(255, 255, 255, 0.05) 0px 25px;
-  }
-}
-
-@media (max-width: 700px) {
-  #display-emp {
-    width: 100%;
   }
 }
 </style>

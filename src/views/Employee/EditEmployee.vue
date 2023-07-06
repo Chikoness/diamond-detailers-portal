@@ -195,15 +195,6 @@ export default {
     
 <style lang="scss">
 #emp-edit {
-  margin: auto;
   margin-top: 1.2rem;
-  width: 40rem;
-  margin-top: 1.2rem;
-}
-
-@media (max-width: 700px) {
-  #emp-edit {
-    width: 100%;
-  }
 }
 </style>
