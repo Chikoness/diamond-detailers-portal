@@ -154,14 +154,24 @@ export default {
   .list {
     display: flex;
     flex-direction: column;
+    align-items: center;
     margin: auto;
     width: 80%;
 
     ion-button {
+      width: 18rem;
       margin-bottom: 1.2rem;
       box-shadow: rgba(255, 255, 255, 0.4) 0px 5px,
         rgba(255, 255, 255, 0.3) 0px 10px, rgba(255, 255, 255, 0.2) 0px 15px,
         rgba(255, 255, 255, 0.1) 0px 20px, rgba(255, 255, 255, 0.05) 0px 25px;
+    }
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .list {
+    ion-button {
+      width: 55vw;
     }
   }
 }
