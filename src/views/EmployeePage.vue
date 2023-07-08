@@ -169,7 +169,7 @@ export default {
   }
 }
 
-@media screen and (max-width: 700px) {
+@media (max-width: 700px) {
   .list {
     ion-button {
       width: 55vw;
