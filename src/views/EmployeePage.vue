@@ -149,6 +149,7 @@ export default {
   .title {
     text-align: center;
     margin-bottom: 1rem;
+    color: #fff;
   }
 
   .list {
