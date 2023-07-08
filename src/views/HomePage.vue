@@ -186,10 +186,12 @@ form {
   margin-top: 1rem;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
 
   ion-button {
     border: 1px solid #000;
+    width: 100% !important;
   }
 }
 
